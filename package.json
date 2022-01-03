@@ -1,0 +1,33 @@
+{
+  "name": "generator-ui5-ts-app-fcl",
+  "version": "1.0.1",
+  "description": "Yeoman-based (sub-)generator for a UI5 TypeScript application using the FlexibleColumnLayout",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd test && yo ../../generator-ui5-ts-app-fcl"
+  },
+  "keywords": [
+    "ui5",
+    "typescript",
+    "application",
+    "yeoman generator"
+  ],
+  "author": "Wouter Lemaire <wouter@lemaire.tech>, Peter Muessig <peter.muessig@sap.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ui5-community/generator-ui5-ts-app-fcl.git"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "package-json": "^7.0.0",
+    "yeoman-generator": "^5.4.2",
+    "yosay": "^2.0.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.3",
+    "jest": "^27.4.0",
+    "yeoman-assert": "^3.1.1",
+    "yeoman-test": "^6.2.0"
+  }
+}
