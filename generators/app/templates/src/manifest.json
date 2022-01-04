@@ -12,7 +12,7 @@
 		"resources": "resources.json",
 		"dataSources": {
 			"mainService": {
-				"uri": "/V2/(S(mo4mpsdbi0fygmzhfv5ik5gf))/OData/OData.svc/",
+				"uri": "<%= path %>",
 				"type": "OData",
 				"settings": {
 					"odataVersion": "2.0",

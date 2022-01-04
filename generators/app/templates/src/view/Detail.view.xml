@@ -15,16 +15,16 @@
 		<f:title>
 			<f:DynamicPageTitle>
 				<f:heading>
-					<Title text="{Name}" level="H2"/>
+					<Title text="{<%= title %>}" level="H2"/>
 				</f:heading>
 				<f:expandedContent>
-					<Label text="{Description}"/>
+					<Label text="{<%= title %>}"/>
 				</f:expandedContent>
 				<f:snappedContent>
-					<Label text="{Description}"/>
+					<Label text="{<%= title %>}"/>
 				</f:snappedContent>
 				<f:snappedTitleOnMobile>
-					<Title text="{Description}"/>
+					<Title text="{<%= title %>}"/>
 				</f:snappedTitleOnMobile>
 				<f:navigationActions>
 					<OverflowToolbarButton
@@ -50,7 +50,7 @@
 		</f:title>
 		<f:header>
 			<f:DynamicPageHeader pinnable="true">
-				<ObjectAttribute title="{i18n>price}" text="{path:'Price',formatter: '.formatter.currencyValue'}"/>
+				<ObjectAttribute title="{i18n>price}" text="{path:'<%= amount %>',formatter: '.formatter.currencyValue'}"/>
 			</f:DynamicPageHeader>
 		</f:header>
 		<f:content>
@@ -60,10 +60,10 @@
 				class="sapUiResponsiveContentPadding">
 				<items>
 					<IconTabFilter text="{i18n>category}" key="category">
-						<Text text="{Category/Name}"></Text>
+						<Text text="Add some content..."></Text>
 					</IconTabFilter>
 					<IconTabFilter text="{i18n>supplier}" key="supplier">
-						<Text text="{Supplier/Name}"></Text>
+						<Text text="Whatever you like"></Text>
 					</IconTabFilter>
 				</items>
 			</IconTabBar>

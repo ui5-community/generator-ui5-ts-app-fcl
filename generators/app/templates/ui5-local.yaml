@@ -22,8 +22,8 @@ server:
     configuration:
       ignoreCertError: false # If set to true, certificate errors will be ignored. E.g. self-signed certificates will be accepted
       backend:
-      - path: /v2
-        url: https://services.odata.org/
+      - path: <%= pathPrefix %>
+        url: <%= origin %>
   - name: fiori-tools-appreload
     afterMiddleware: compression
     configuration:

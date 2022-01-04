@@ -44,7 +44,7 @@ module.exports = class extends Generator {
     }
 
     const entities = {
-      Products: ["Id", "Name"],
+      Products: ["Id", "Name","Price"],
       Suppliers: ["Id", "Test", "more"]
     };
     const minFwkVersion = {
@@ -53,6 +53,7 @@ module.exports = class extends Generator {
     };
 
     const fwkDependencies = {
+      OpenUI5: "@openui5/ts-types-esm",
       SAPUI5: "@sapui5/ts-types-esm"
     };
 
@@ -127,9 +128,9 @@ module.exports = class extends Generator {
       },
       {
         type: "list",
-        name: "description",
-        message: "Which property do you want to use as description?",
-        default: "Description",
+        name: "amount",
+        message: "Which property do you want to use as amount?",
+        default: "Price",
         choices: answers => {
           //const entities = metaHelper.getEntities(answers.endpoint);
           return entities[answers.entity];
@@ -183,7 +184,6 @@ module.exports = class extends Generator {
     ];
 
     return this.prompt(prompts).then(props => {
-
       // use the namespace and the application name as new directory
       if (props.newdir) {
         this.destinationRoot(`${props.namespace}.${props.application}`);
@@ -193,7 +193,7 @@ module.exports = class extends Generator {
       // apply the properties
       this.config.set(props);
       this.config.set("framework", props.framework);
-
+      
       // determine the ts-types and version
       this.config.set("tstypes", fwkDependencies[props.framework]);
       this.config.set("tstypesVersion", props.frameworkVersion);
