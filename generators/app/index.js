@@ -3,7 +3,7 @@ const Generator = require("yeoman-generator");
 // patches the Generator for the install tasks as new custom install
 // tasks produce ugly errors! (Related issue: https://github.com/yeoman/environment/issues/309)
 require('lodash').extend(Generator.prototype, require('yeoman-generator/lib/actions/install'))
-
+const { URL } = require('url');
 const chalk = require("chalk");
 const yosay = require("yosay");
 const path = require("path");
@@ -11,6 +11,18 @@ const glob = require("glob");
 const semver = require("semver");
 const packageJson = require('package-json');
 
+const stringIsAValidUrl = (s, protocols) => {
+  try {
+    const url = new URL(s);
+    return protocols
+      ? url.protocol
+        ? protocols.map(x => `${x.toLowerCase()}:`).includes(url.protocol)
+        : false
+      : true;
+  } catch (err) {
+    return false;
+  }
+};
 module.exports = class extends Generator {
 
   static displayName = "Create a new UI5 TypeScript application using the FlexibleColumnLayout";
@@ -31,9 +43,12 @@ module.exports = class extends Generator {
       );
     }
 
-    const framework = "SAPUI5";
-
+    const entities = {
+      Products: ["Id", "Name"],
+      Suppliers: ["Id", "Test", "more"]
+    };
     const minFwkVersion = {
+      OpenUI5: "1.90.1", //"1.60.0",
       SAPUI5: "1.90.0" //"1.77.0"
     };
 
@@ -69,22 +84,81 @@ module.exports = class extends Generator {
         default: "com.myorg"
       },
       {
+        type: "input",
+        name: "endpoint",
+        message: "Which endpoint do you want to use for your OData service?",
+        validate: s => {
+          if (stringIsAValidUrl(s, ['http', 'https'])) {
+            return true;
+          }
+          return "Please provide a valid OData service endpoint.";
+        },
+        default: "https://services.odata.org/V2/OData/OData.svc/"
+      },
+      {
+        type: "list",
+        name: "entity",
+        message: "Which entity do you want to start from?",
+        default: "Suppliers",
+        choices: answers => {
+          //const entities = metaHelper.getEntities(answers.endpoint);
+          return ["Suppliers", "Products"];
+        }
+      },
+      {
+        type: "list",
+        name: "key",
+        message: "Which property do you want to use as key?",
+        default: "Id",
+        choices: answers => {
+          //const entities = metaHelper.getEntities(answers.endpoint);
+          return entities[answers.entity];
+        }
+      },
+      {
+        type: "list",
+        name: "title",
+        message: "Which property do you want to use as title?",
+        default: "Title",
+        choices: answers => {
+          //const entities = metaHelper.getEntities(answers.endpoint);
+          return entities[answers.entity];
+        }
+      },
+      {
+        type: "list",
+        name: "description",
+        message: "Which property do you want to use as description?",
+        default: "Description",
+        choices: answers => {
+          //const entities = metaHelper.getEntities(answers.endpoint);
+          return entities[answers.entity];
+        }
+      },
+      {
+        type: "list",
+        name: "framework",
+        message: "Which framework do you want to use?",
+        choices: ["OpenUI5", "SAPUI5"],
+        default: "OpenUI5"
+      },
+      {
         when: response => {
-          this._minFwkVersion = minFwkVersion[framework];
+          this._minFwkVersion = minFwkVersion[response.framework];
           return true;
         },
         type: "input",
         name: "frameworkVersion",
         message: "Which SAPUI5 framework version do you want to use?",
         default: async (answers) => {
-          const npmPackage = fwkDependencies[framework];
+          const npmPackage = fwkDependencies[answers.framework];
           try {
             return (await packageJson(npmPackage)).version;
           } catch (ex) {
             chalk.red('Failed to lookup latest version for ${npmPackage}! Fallback to min version...')
-            return minFwkVersion[framework];
+            return minFwkVersion[answers.framework];
           }
-      },
+        },
         validate: v => {
           return (
             (v && semver.valid(v) && semver.gte(v, this._minFwkVersion)) ||
@@ -118,16 +192,21 @@ module.exports = class extends Generator {
 
       // apply the properties
       this.config.set(props);
-      this.config.set("framework", framework);
+      this.config.set("framework", props.framework);
 
       // determine the ts-types and version
-      this.config.set("tstypes", fwkDependencies[framework]);
+      this.config.set("tstypes", fwkDependencies[props.framework]);
       this.config.set("tstypesVersion", props.frameworkVersion);
 
       // appId + appURI
       this.config.set("appId", `${props.namespace}.${props.application}`);
       this.config.set("appURI", `${props.namespace.split(".").join("/")}/${props.application}`);
 
+      // apply OData settings
+      const odataSettings = new URL(props.endpoint);
+      this.config.set("origin", odataSettings.origin);
+      this.config.set("path", odataSettings.pathname);
+      this.config.set("pathPrefix",`/${odataSettings.pathname.substring(1).split('/')[0]}`);
     });
   }
 
