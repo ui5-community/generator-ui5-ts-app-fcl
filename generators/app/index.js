@@ -2,27 +2,19 @@
 const Generator = require("yeoman-generator");
 // patches the Generator for the install tasks as new custom install
 // tasks produce ugly errors! (Related issue: https://github.com/yeoman/environment/issues/309)
-require('lodash').extend(Generator.prototype, require('yeoman-generator/lib/actions/install'))
+require("lodash").extend(Generator.prototype, require("yeoman-generator/lib/actions/install"));
+
+const path = require("path");
 const { URL } = require('url');
+
 const chalk = require("chalk");
 const yosay = require("yosay");
-const path = require("path");
 const glob = require("glob");
 const semver = require("semver");
 const packageJson = require('package-json');
 
-const stringIsAValidUrl = (s, protocols) => {
-  try {
-    const url = new URL(s);
-    return protocols
-      ? url.protocol
-        ? protocols.map(x => `${x.toLowerCase()}:`).includes(url.protocol)
-        : false
-      : true;
-  } catch (err) {
-    return false;
-  }
-};
+const {isValidUrl, ODataMetadata} = require("./utils");
+
 module.exports = class extends Generator {
 
   static displayName = "Create a new UI5 TypeScript application using the FlexibleColumnLayout";
@@ -57,6 +49,7 @@ module.exports = class extends Generator {
       SAPUI5: "@sapui5/ts-types-esm"
     };
 
+    let metadata;
     const prompts = [
       {
         type: "input",
@@ -66,7 +59,6 @@ module.exports = class extends Generator {
           if (/^\d*[a-zA-Z][a-zA-Z0-9]*$/g.test(s)) {
             return true;
           }
-
           return "Please use alpha numeric characters only for the application name.";
         },
         default: "myapp"
@@ -79,7 +71,6 @@ module.exports = class extends Generator {
           if (/^[a-zA-Z0-9_.]*$/g.test(s)) {
             return true;
           }
-
           return "Please use alpha numeric characters and dots only for the namespace.";
         },
         default: "com.myorg"
@@ -88,9 +79,14 @@ module.exports = class extends Generator {
         type: "input",
         name: "endpoint",
         message: "Which endpoint do you want to use for your OData service?",
-        validate: s => {
-          if (stringIsAValidUrl(s, ['http', 'https'])) {
-            return true;
+        validate: async (url) => {
+          if (isValidUrl(url, ['http', 'https'])) {
+            try {
+              metadata = await ODataMetadata.load(url);
+              return !!metadata;
+            } catch (err) {
+              return `Please provide a valid OData service endpoint.\n${err.message}`;
+            }
           }
           return "Please provide a valid OData service endpoint.";
         },
@@ -100,40 +96,32 @@ module.exports = class extends Generator {
         type: "list",
         name: "entity",
         message: "Which entity do you want to start from?",
-        default: "Suppliers",
         choices: answers => {
-          //const entities = metaHelper.getEntities(answers.endpoint);
-          return ["Suppliers", "Products"];
+          return metadata.getEntitySets();
         }
       },
       {
         type: "list",
         name: "key",
         message: "Which property do you want to use as key?",
-        default: "Id",
         choices: answers => {
-          //const entities = metaHelper.getEntities(answers.endpoint);
-          return entities[answers.entity];
+          return metadata.getKeys(answers.entity);
         }
       },
       {
         type: "list",
         name: "title",
         message: "Which property do you want to use as title?",
-        default: "Title",
         choices: answers => {
-          //const entities = metaHelper.getEntities(answers.endpoint);
-          return entities[answers.entity];
+          return metadata.getProperties(answers.entity);
         }
       },
       {
         type: "list",
         name: "amount",
         message: "Which property do you want to use as amount?",
-        default: "Price",
         choices: answers => {
-          //const entities = metaHelper.getEntities(answers.endpoint);
-          return entities[answers.entity];
+          return metadata.getProperties(answers.entity);
         }
       },
       {
@@ -144,13 +132,13 @@ module.exports = class extends Generator {
         default: "OpenUI5"
       },
       {
+        type: "input",
+        name: "frameworkVersion",
+        message: "Which framework version do you want to use?",
         when: response => {
           this._minFwkVersion = minFwkVersion[response.framework];
           return true;
         },
-        type: "input",
-        name: "frameworkVersion",
-        message: "Which SAPUI5 framework version do you want to use?",
         default: async (answers) => {
           const npmPackage = fwkDependencies[answers.framework];
           try {

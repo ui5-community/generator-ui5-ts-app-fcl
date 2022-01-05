@@ -19,14 +19,18 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "axios": "^0.24.0",
     "chalk": "^4.1.2",
     "package-json": "^7.0.0",
-    "yeoman-generator": "^5.4.2",
+    "x2js": "^3.4.2",
+    "xmldom": "^0.6.0",
+    "xpath": "^0.0.32",
+    "yeoman-generator": "^5.5.2",
     "yosay": "^2.0.2"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.3",
-    "jest": "^27.4.0",
+    "@types/jest": "^27.4.0",
+    "jest": "^27.4.5",
     "yeoman-assert": "^3.1.1",
     "yeoman-test": "^6.2.0"
   }
