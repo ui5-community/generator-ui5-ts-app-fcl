@@ -63,7 +63,7 @@ module.exports = {
                     this.entitySets[entitySet.Name] = this.entityTypes[entitySet.EntityType];
                 });
             });
-            console.log(JSON.stringify(this.entitySets, null, 2));
+            // console.log(JSON.stringify(this.entitySets, null, 2));
 
         }
 

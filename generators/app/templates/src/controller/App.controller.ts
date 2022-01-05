@@ -12,11 +12,13 @@ export type inputParameters = {
 export default class App extends BaseController {
 	private currentRouteName: string;
 	private currentId: string;
+
 	public onInit(): void {
 		// apply content density mode to root view
 		this.getView().addStyleClass((this.getOwnerComponent() as AppComponent).getContentDensityClass());
 		(this.getOwnerComponent() as AppComponent).getRouter().attachRouteMatched((event: UI5Event)=>this.onRouteMatched(event), this);
 	}
+
 	public onStateChanged(oEvent: UI5Event):void{
 		const bIsNavigationArrow =(oEvent.getParameter("isNavigationArrow") as string),
 			sLayout = (oEvent.getParameter("layout") as string);
@@ -28,6 +30,7 @@ export default class App extends BaseController {
 			(this.getOwnerComponent() as AppComponent).getRouter().navTo(this.currentRouteName, {layout: sLayout, id: this.currentId},{}, true);
 		}
 	}
+	
 	public onRouteMatched(oEvent: UI5Event):void{
 		const sRouteName = (oEvent.getParameter("name") as string),
 			oArguments = (oEvent.getParameter("arguments") as inputParameters);

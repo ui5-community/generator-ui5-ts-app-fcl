@@ -39,14 +39,14 @@
 						<Text text="Title" />
 					</Column>
 					<Column	hAlign="End">
-						<Text text="Amount" />
+						<Text text="Other field" />
 					</Column>
 				</columns>
 				<items>
 					<ColumnListItem type="Navigation" press=".onListItemPress">
 						<cells>
 							<ObjectIdentifier title="{<%= title %>}" text="{<%= key %>}" />
-							<ObjectNumber number="{<%= amount %>}" />
+							<Text text="{<%= otherField %>}" />
 						</cells>
 					</ColumnListItem>
 				</items>

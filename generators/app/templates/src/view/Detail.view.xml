@@ -49,7 +49,7 @@
 		</f:title>
 		<f:header>
 			<f:DynamicPageHeader pinnable="true">
-				<ObjectAttribute title="{i18n>price}" text="{path:'<%= amount %>',formatter: '.formatter.currencyValue'}"/>
+				<ObjectAttribute title="Ohter field" text="{path:'<%= otherField %>',formatter: '.formatter.formatValue'}"/>
 			</f:DynamicPageHeader>
 		</f:header>
 		<f:content>
@@ -58,10 +58,10 @@
 				expanded="{device>/isNoPhone}"
 				class="sapUiResponsiveContentPadding">
 				<items>
-					<IconTabFilter text="{i18n>category}" key="category">
+					<IconTabFilter text="Tab 1" key="tab1">
 						<Text text="Add some content..."></Text>
 					</IconTabFilter>
-					<IconTabFilter text="{i18n>supplier}" key="supplier">
+					<IconTabFilter text="Tab 2" key="tab2">
 						<Text text="Whatever you like"></Text>
 					</IconTabFilter>
 				</items>

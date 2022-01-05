@@ -64,18 +64,18 @@ export default class ErrorHandler extends UI5Object {
 	 * @param {string} sDetails a technical error to be displayed on request
 	 * @private
 	 */
-	private showServiceError(sDetails: ui5Response) {
+	private showServiceError(details: ui5Response) {
 		if (this.messageOpen) {
 			return;
 		}
 		this.messageOpen = true;
 		let responseText:any;
 
-		if(sDetails.responseText){
+		if(details.responseText){
 			try{
-				responseText = (JSON.parse(sDetails.responseText) as unknown);
+				responseText = (JSON.parse(details.responseText) as unknown);
 			}catch(ex){
-				responseText = sDetails.responseText;
+				responseText = details.responseText;
 			}
 		}
 		MessageBox.error(

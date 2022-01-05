@@ -3,14 +3,17 @@ export default {
 	 * Rounds the currency value to 2 digits
 	 *
 	 * @public
-	 * @param {string} sValue value to be formatted
+	 * @param {string} value value to be formatted
 	 * @returns {string} formatted currency value with 2 digits
 	 */
-	currencyValue: (sValue:string) => {
-		if (!sValue) {
+	formatValue: (value:string) => {
+		if (!value) {
 			return "";
 		}
-
-		return parseFloat(sValue).toFixed(2);
+		try {
+			return parseFloat(value).toFixed(2);
+		} catch (error) {
+			return value;
+		}
 	}
 }

@@ -20,16 +20,20 @@ export default class Detail extends BaseController {
 
 		this.getRouter().getRoute("detail").attachPatternMatched((event:UI5Event)=>this.onObjectMatched(event), this);
 	}
-	private onObjectMatched(oEvent: UI5Event): void {
+
+	private onObjectMatched(event: UI5Event): void {
 		const viewModel = (this.getModel("detailView") as JSONModel);
-		this.id = (oEvent.getParameter("arguments") as inputParameters).id || this.id || "0";
+
+		this.id = (event.getParameter("arguments") as inputParameters).id || this.id || "0";
+
 		(this.getModel() as ODataModel).metadataLoaded().then( ()=> {
-			const path = (this.getModel() as ODataModel).createKey("/Products",{
+
+			const path = (this.getModel() as ODataModel).createKey("/<%= entity %>",{
 				ID:this.id
 			});
+
 			this.getView().bindElement({
 				path: path,
-				parameters:{expand:"Supplier,Category"},
 				events:{
                     change : ()=>this.onBindingChange(),
                     dataRequested : ()=>{
@@ -40,8 +44,10 @@ export default class Detail extends BaseController {
                     }
 				}
 			});
+
 		});
 	}
+
 	private onBindingChange() {
 		const elementBinding = this.getView().getElementBinding();
 		// No data for the binding
@@ -49,24 +55,25 @@ export default class Detail extends BaseController {
 			this.getRouter().getTargets().display("detailObjectNotFound");
 		}
 	}
+	
 	public onCloseDetailPress(): void {
 		(this.getModel("appView") as JSONModel).setProperty("/actionButtonsInfo/midColumn/fullScreen", false);
 		this.getRouter().navTo("master");
 	}
 
 	public handleFullScreen(): void {
-		const sNextLayout = ((this.getModel("appView") as JSONModel).getProperty("/actionButtonsInfo/midColumn/fullScreen") as string);
-		this.getRouter().navTo("detail", { layout: sNextLayout, id: this.id });
+		const nextLayout = ((this.getModel("appView") as JSONModel).getProperty("/actionButtonsInfo/midColumn/fullScreen") as string);
+		this.getRouter().navTo("detail", { layout: nextLayout, id: this.id });
 	}
 
 	public handleExitFullScreen(): void {
-		const sNextLayout = ((this.getModel("appView") as JSONModel).getProperty("/actionButtonsInfo/midColumn/exitFullScreen") as string);
-		this.getRouter().navTo("detail", { layout: sNextLayout, id: this.id });
+		const nextLayout = ((this.getModel("appView") as JSONModel).getProperty("/actionButtonsInfo/midColumn/exitFullScreen") as string);
+		this.getRouter().navTo("detail", { layout: nextLayout, id: this.id });
 	}
 
 	public handleClose(): void {
-		const sNextLayout = ((this.getModel("appView") as JSONModel).getProperty("/actionButtonsInfo/midColumn/closeColumn") as string);
-		this.getRouter().navTo("master", { layout: sNextLayout });
+		const nextLayout = ((this.getModel("appView") as JSONModel).getProperty("/actionButtonsInfo/midColumn/closeColumn") as string);
+		this.getRouter().navTo("master", { layout: nextLayout });
 	}
 
 }

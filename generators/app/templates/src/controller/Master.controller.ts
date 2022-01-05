@@ -21,13 +21,15 @@ export default class Master extends BaseController {
 	private onMasterMatched() {
 		(this.getModel("appView") as JSONModel).setProperty("/layout", "OneColumn");
 	}
+
 	private async onListItemPress(event: UI5Event): Promise<void> {
-		const bReplace = !system.phone,
-			id = ((event.getSource() as CustomListItem).getBindingContext().getProperty("ID") as number),
+		const replace = !system.phone,
+			id = ((event.getSource() as CustomListItem).getBindingContext().getProperty("<%= key %>") as number),
 			helper = await (this.getOwnerComponent() as Component).getHelper(),
-			oNextUIState = (helper.getNextUIState(1) as UIState);
-		this.getRouter().navTo("detail", { id: id, layout: oNextUIState.layout },{},bReplace);
+			nextUIState = (helper.getNextUIState(1) as UIState);
+		this.getRouter().navTo("detail", { id: id, layout: nextUIState.layout },{},replace);
 	}
+
 	private onSearch(event:UI5Event) {
 		let tableSearchState:Array<Filter> = [],
 			query = event.getParameter("query");
@@ -38,6 +40,7 @@ export default class Master extends BaseController {
 
 		((this.getView().byId("productsTable") as List).getBinding("items") as ODataListBinding).filter(tableSearchState, "Application");
 	}
+
 	private onSort(event:UI5Event) {
 		this.descendingSort = !this.descendingSort;
 		const view = this.getView(),

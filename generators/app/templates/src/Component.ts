@@ -91,37 +91,39 @@ export default class Component extends UIComponent {
 	}
 	private async onBeforeRouteMatched(oEvent: UI5Event) {
 
-		const oModel = (this.getModel("appView") as JSONModel),
-			sLayout = (oEvent.getParameters() as routeParameters).arguments.layout;
+		const model = (this.getModel("appView") as JSONModel),
+			layout = (oEvent.getParameters() as routeParameters).arguments.layout;
 
 		// If there is no layout parameter, query for the default level 0 layout (normally OneColumn)
-		if (!sLayout) {
+		if (!layout) {
 			const helper = await this.getHelper() ;
-			const oNextUIState = (helper.getNextUIState(0) as UIState);
-			oModel.setProperty("/layout", oNextUIState.layout);
+			const nextUIState = (helper.getNextUIState(0) as UIState);
+			model.setProperty("/layout", nextUIState.layout);
 			return;
 		}
 
-		oModel.setProperty("/layout", sLayout);
+		model.setProperty("/layout", layout);
 	}
+
 	public async getHelper(): Promise<FlexibleColumnLayoutSemanticHelper> {
 		const fcl = await this.getFcl(),
-			oSettings = {
+			settings = {
 				defaultTwoColumnLayoutType: LayoutType.TwoColumnsMidExpanded,
 				defaultThreeColumnLayoutType: LayoutType.ThreeColumnsMidExpanded
 			};
-		return (FlexibleColumnLayoutSemanticHelper.getInstanceFor(fcl, oSettings));
+
+		return (FlexibleColumnLayoutSemanticHelper.getInstanceFor(fcl, settings));
 	}
 	private getFcl(): Promise<FlexibleColumnLayout> {
 		return new Promise((resolve, reject) => {
-			const oFCL = ((this.getRootControl() as View).byId('fcl') as FlexibleColumnLayout);
-			if (!oFCL) {
+			const FCL = ((this.getRootControl() as View).byId('fcl') as FlexibleColumnLayout);
+			if (!FCL) {
 				(this.getRootControl() as View).attachAfterInit((oEvent: UI5Event) => {
 					resolve(((oEvent.getSource() as View).byId('fcl') as FlexibleColumnLayout));
 				});
 				return;
 			}
-			resolve(oFCL);
+			resolve(FCL);
 
 		});
 	}

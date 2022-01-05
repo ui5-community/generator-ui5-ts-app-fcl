@@ -118,8 +118,8 @@ module.exports = class extends Generator {
       },
       {
         type: "list",
-        name: "amount",
-        message: "Which property do you want to use as amount?",
+        name: "otherField",
+        message: "Which other property do you want to use as well?",
         choices: answers => {
           return metadata.getProperties(answers.entity);
         }
