@@ -55,7 +55,7 @@ export type UIState = {
  * @namespace <%= appId %>
  */
 export default class Component extends UIComponent {
-	private _sContentDensityClass: string | undefined;
+	private contentDensityClass: string | undefined;
 	private errorHandler: ErrorHandler;
 	public static metadata = {
 		manifest: "json"
@@ -75,19 +75,19 @@ export default class Component extends UIComponent {
 		super.destroy();
 	}
 	public getContentDensityClass(): string {
-		if (this._sContentDensityClass === undefined) {
+		if (this.contentDensityClass === undefined) {
 			// check whether FLP has already set the content density class; do nothing in this case
 			// eslint-disable-next-line
 			if (document.body.classList.contains("sapUiSizeCozy") || document.body.classList.contains("sapUiSizeCompact")) {
-				this._sContentDensityClass = "";
+				this.contentDensityClass = "";
 			} else if (!support.touch) { // apply "compact" mode if touch is not supported
-				this._sContentDensityClass = "sapUiSizeCompact";
+				this.contentDensityClass = "sapUiSizeCompact";
 			} else {
 				// "cozy" in case of touch support; default for most sap.m controls, but needed for desktop-first controls like sap.ui.table.Table
-				this._sContentDensityClass = "sapUiSizeCozy";
+				this.contentDensityClass = "sapUiSizeCozy";
 			}
 		}
-		return this._sContentDensityClass;
+		return this.contentDensityClass;
 	}
 	private async onBeforeRouteMatched(oEvent: UI5Event) {
 
