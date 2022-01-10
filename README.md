@@ -41,6 +41,18 @@ $> yo ./generator-ui5-ts-app-fcl
    __'.___.'__
  ´   `  |° ´ Y `
 ```
+## Options
+Besides the options you have in the basic TypeScript template like appname and namespace, we have added more options that will be used to configure the OData service:
+### EndPoint
+This should be an endpoint that points to the Service Document of your OData service, like for example the northwind service: https://services.odata.org/V2/OData/OData.svc/
+### EntitySet
+Based on the provided OData Service Document, the generator will provide you a list of all available OData EntitySets. You will be able to select one as your main EntitySet. The Master page will show a list of all entries in this EntitySet, while the detail page will show the details of the selected entry.
+### Key
+The next option is the key. You'll have to select the field you would like to use as the main key. This will be used in the routing configuration as parameter to navigate to the detail page.
+### Title
+The title option will be bound to the title in the list as well as on the detail page.
+### Other Field
+This last one is an open and free field to bind a second field to the table and on the detail page. It can be a numbe or a description of the title. Just one additional field to kickstart your project!
 
 ## Support
 
@@ -56,3 +68,6 @@ This project is licensed under the Apache Software License, version 2.0 except a
 
 [license-image]: https://img.shields.io/github/license/ui5-community/generator-ui5-ts-app-fcl.svg
 [license-url]: https://github.com/ui5-community/generator-ui5-ts-app-fcl/blob/main/LICENSE
+
+---------------------------
+###### This generator is provided to you by Peter Muessig and Wouter Lemaire
