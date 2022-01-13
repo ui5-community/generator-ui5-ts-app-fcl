@@ -28,9 +28,9 @@ export default class Master extends BaseController {
 		this.getRouter().navTo("detail", { id: id, layout: nextUIState.layout },{},replace);
 	}
 
-	private onSearch(event:UI5Event) {
-		let tableSearchState:Array<Filter> = [],
-			query = event.getParameter("query");
+	private onSearch(event: UI5Event) {
+		const query = event.getParameter("query") as string;
+		let tableSearchState:Array<Filter> = [];
 
 		if (query && query.length > 0) {
 			tableSearchState = [new Filter("Name", FilterOperator.Contains, query)];
@@ -39,7 +39,7 @@ export default class Master extends BaseController {
 		((this.getView().byId("productsTable") as List).getBinding("items") as ODataListBinding).filter(tableSearchState, "Application");
 	}
 
-	private onSort(event:UI5Event) {
+	private onSort(event: UI5Event) {
 		this.descendingSort = !this.descendingSort;
 		const view = this.getView(),
 			table = (view.byId("productsTable") as List),

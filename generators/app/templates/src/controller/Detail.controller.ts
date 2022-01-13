@@ -26,7 +26,7 @@ export default class Detail extends BaseController {
 
 		this.id = (event.getParameter("arguments") as inputParameters).id || this.id || "0";
 
-		(this.getModel() as ODataModel).metadataLoaded().then( ()=> {
+		void (this.getModel() as ODataModel).metadataLoaded().then( ()=> {
 
 			const path = (this.getModel() as ODataModel).createKey("/<%= entity %>",{
 				ID:this.id
@@ -35,13 +35,13 @@ export default class Detail extends BaseController {
 			this.getView().bindElement({
 				path: path,
 				events:{
-                    change : ()=>this.onBindingChange(),
-                    dataRequested : ()=>{
-                        viewModel.setProperty("/busy", true);
-                    },
-                    dataReceived: function () {
-                        viewModel.setProperty("/busy", false);
-                    }
+					change : ()=>this.onBindingChange(),
+					dataRequested : ()=>{
+						viewModel.setProperty("/busy", true);
+					},
+					dataReceived: function () {
+						viewModel.setProperty("/busy", false);
+					}
 				}
 			});
 
@@ -52,7 +52,7 @@ export default class Detail extends BaseController {
 		const elementBinding = this.getView().getElementBinding();
 		// No data for the binding
 		if (!elementBinding.getBoundContext()) {
-			this.getRouter().getTargets().display("detailObjectNotFound");
+			void this.getRouter().getTargets().display("detailObjectNotFound");
 		}
 	}
 	
