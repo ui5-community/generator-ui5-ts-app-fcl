@@ -69,9 +69,9 @@
 		</f:content>
 			<f:footer>
 			<OverflowToolbar>
-                <Button icon="sap-icon://alert" text="{=${message>/}.length}" visible="{=${message>/}.length > 0}"
-                    type="Emphasized" press=".onMessagePopoverPress">
-                </Button>
+				<Button icon="sap-icon://alert" text="{=${message>/}.length}" visible="{=${message>/}.length > 0}"
+					type="Emphasized" press=".onMessagePopoverPress">
+				</Button>
 				<ToolbarSpacer/>
 			</OverflowToolbar>			
 		</f:footer>

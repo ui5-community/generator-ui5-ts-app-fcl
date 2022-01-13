@@ -17,16 +17,16 @@
 		</f:title>
 		<f:content>
 			<Table id="productsTable"
-				   inset="false"
-				   items="{
+					inset="false"
+					items="{
 						path: '/<%= entity %>',
 						sorter: {
 							path: '<%= title %>'
 						}
 					}"
-				   class="sapFDynamicPageAlignContent"
-				   width="auto"
-				   busyIndicatorDelay="0">
+					class="sapFDynamicPageAlignContent"
+					width="auto"
+					busyIndicatorDelay="0">
 				<headerToolbar>
 					<OverflowToolbar>
 						<ToolbarSpacer/>

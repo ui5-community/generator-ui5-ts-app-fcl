@@ -8,6 +8,7 @@ import AppComponent from "../Component";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
 import UI5Event from "sap/ui/base/Event";
 import ODataModel from "sap/ui/model/odata/v2/ODataModel";
+
 type ui5Response = {
 	/**
 	 * A text that describes the failure.
@@ -26,6 +27,7 @@ type ui5Response = {
 	 */
 	responseText?: string;
 };
+
 /**
  * @namespace <%= appId %>.controller
  */
@@ -35,6 +37,7 @@ export default class ErrorHandler extends UI5Object {
 	private model: ODataModel;
 	private messageOpen: boolean;
 	private errorText: string;
+
 	constructor(component: UIComponent) {
 		super();
 
@@ -58,6 +61,7 @@ export default class ErrorHandler extends UI5Object {
 			}
 		});
 	}
+
 	/**
 	 * Shows a {@link sap.m.MessageBox} when a service call has failed.
 	 * Only the first error message will be display.

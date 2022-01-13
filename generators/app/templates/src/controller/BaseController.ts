@@ -10,8 +10,6 @@ import ResourceModel from "sap/ui/model/resource/ResourceModel";
  * @namespace <%= appId %>.controller
  */
 export default class BaseController extends Controller {	
-	public onExit(): void {
-	}
 	/**
 	 * Convenience method for accessing the router in every controller of the application.
 	 * @public

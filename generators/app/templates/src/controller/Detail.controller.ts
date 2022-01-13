@@ -75,5 +75,4 @@ export default class Detail extends BaseController {
 		const nextLayout = ((this.getModel("appView") as JSONModel).getProperty("/actionButtonsInfo/midColumn/closeColumn") as string);
 		this.getRouter().navTo("master", { layout: nextLayout });
 	}
-
 }

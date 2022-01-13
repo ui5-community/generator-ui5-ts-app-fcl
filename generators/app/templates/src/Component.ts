@@ -51,29 +51,32 @@ export type UIState = {
 		}
 	}
 }
+
 /**
  * @namespace <%= appId %>
  */
 export default class Component extends UIComponent {
 	private contentDensityClass: string | undefined;
 	private errorHandler: ErrorHandler;
+
 	public static metadata = {
 		manifest: "json"
 	};
 
 	public init(): void {
 		this.errorHandler = new ErrorHandler(this);
-		
 		super.init();
-		// set the device model
 		this.setModel(models.createDeviceModel(), "device");
 		this.setModel(new JSONModel(), "appView");
 		this.getRouter().attachBeforeRouteMatched((event: UI5Event) => this.onBeforeRouteMatched(event), this)
 		this.getRouter().initialize();
 	}
+
 	public destroy(): void {
+		this.getRouter().detachBeforeRouteMatched((event: UI5Event) => this.onBeforeRouteMatched(event), this);
 		super.destroy();
 	}
+
 	public getContentDensityClass(): string {
 		if (this.contentDensityClass === undefined) {
 			// check whether FLP has already set the content density class; do nothing in this case
@@ -89,8 +92,8 @@ export default class Component extends UIComponent {
 		}
 		return this.contentDensityClass;
 	}
-	private async onBeforeRouteMatched(oEvent: UI5Event) {
 
+	private async onBeforeRouteMatched(oEvent: UI5Event) {
 		const model = (this.getModel("appView") as JSONModel),
 			layout = (oEvent.getParameters() as routeParameters).arguments.layout;
 
@@ -111,9 +114,9 @@ export default class Component extends UIComponent {
 				defaultTwoColumnLayoutType: LayoutType.TwoColumnsMidExpanded,
 				defaultThreeColumnLayoutType: LayoutType.ThreeColumnsMidExpanded
 			};
-
 		return (FlexibleColumnLayoutSemanticHelper.getInstanceFor(fcl, settings));
 	}
+
 	private getFcl(): Promise<FlexibleColumnLayout> {
 		return new Promise((resolve, reject) => {
 			const FCL = ((this.getRootControl() as View).byId('fcl') as FlexibleColumnLayout);
@@ -124,10 +127,6 @@ export default class Component extends UIComponent {
 				return;
 			}
 			resolve(FCL);
-
 		});
-	}
-	public onExit():void{
-		this.getRouter().detachBeforeRouteMatched((event: UI5Event) => this.onBeforeRouteMatched(event), this);
 	}
 }

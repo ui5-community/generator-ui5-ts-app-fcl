@@ -15,8 +15,6 @@ import Sorter from "sap/ui/model/Sorter";
  */
 export default class Master extends BaseController {
 	private descendingSort = false;
-	public onInit(): void {
-	}
 
 	private onMasterMatched() {
 		(this.getModel("appView") as JSONModel).setProperty("/layout", "OneColumn");

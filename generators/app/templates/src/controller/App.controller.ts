@@ -6,6 +6,7 @@ import UI5Event from "sap/ui/base/Event";
 export type inputParameters = {
 	id: string;
 };
+
 /**
  * @namespace <%= appId %>.controller
  */
@@ -41,6 +42,7 @@ export default class App extends BaseController {
 		this.currentRouteName = sRouteName;
 		this.currentId = oArguments.id;
 	}
+
 	private async updateUIElements() {
 		const oModel = ((this.getOwnerComponent() as AppComponent).getModel("appView") as JSONModel),
 			helper = await (this.getOwnerComponent() as AppComponent).getHelper(),
