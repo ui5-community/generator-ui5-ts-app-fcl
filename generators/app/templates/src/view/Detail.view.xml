@@ -49,7 +49,7 @@
 		</f:title>
 		<f:header>
 			<f:DynamicPageHeader pinnable="true">
-				<ObjectAttribute title="Ohter field" text="{path:'<%= otherField %>',formatter: '.formatter.formatValue'}"/>
+				<ObjectAttribute title="Other field" text="{path:'<%= otherField %>',formatter: '.formatter.formatValue'}"/>
 			</f:DynamicPageHeader>
 		</f:header>
 		<f:content>
