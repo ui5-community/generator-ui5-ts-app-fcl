@@ -44,9 +44,9 @@ module.exports = class extends Generator {
       SAPUI5: "1.90.0" //"1.77.0"
     };
 
-    const fwkDependencies = {
-      OpenUI5: "@openui5/ts-types-esm",
-      SAPUI5: "@sapui5/ts-types-esm"
+    const getTypePackageFor = function(framework, version = "99.99.99") {
+      const typesName = semver.gte(version, "1.113.0") ? "types" : "ts-types-esm";
+      return `@${framework.toLowerCase()}/${typesName}`;
     };
 
     let metadata;
@@ -140,7 +140,7 @@ module.exports = class extends Generator {
           return true;
         },
         default: async (answers) => {
-          const npmPackage = fwkDependencies[answers.framework];
+          const npmPackage = getTypePackageFor(answers.framework);
           try {
             return (await packageJson(npmPackage)).version;
           } catch (ex) {
@@ -183,7 +183,7 @@ module.exports = class extends Generator {
       this.config.set("framework", props.framework);
       
       // determine the ts-types and version
-      this.config.set("tstypes", fwkDependencies[props.framework]);
+      this.config.set("tstypes", getTypePackageFor(props.framework, props.frameworkVersion));
       this.config.set("tstypesVersion", props.frameworkVersion);
 
       // appId + appURI

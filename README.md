@@ -2,7 +2,7 @@
 
 [![License Status][license-image]][license-url]
 
-Generator which use the official UI5 tooling and support multiple deployment targets such as the SAP Business Technology Platform. This generator was build as a plug-in for the community project [Easy-UI5](https://github.com/SAP/generator-easy-ui5/) by [SAP](https://github.com/SAP/).
+Generator which use the official UI5 tooling and support multiple deployment targets such as the SAP Business Technology Platform. This generator was built as a plug-in for the community project [Easy-UI5](https://github.com/SAP/generator-easy-ui5/) by [SAP](https://github.com/SAP/).
 
 ## Usage with easy-ui5
 
