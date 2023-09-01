@@ -1,4 +1,3 @@
-import AppComponent, { UIState } from "../Component";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import BaseController from "./BaseController";
 import UI5Event from "sap/ui/base/Event";
@@ -16,8 +15,8 @@ export default class App extends BaseController {
 
 	public onInit(): void {
 		// apply content density mode to root view
-		this.getView().addStyleClass((this.getOwnerComponent() as AppComponent).getContentDensityClass());
-		(this.getOwnerComponent() as AppComponent).getRouter().attachRouteMatched((event: UI5Event)=>this.onRouteMatched(event), this);
+		this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
+		this.getOwnerComponent().getRouter().attachRouteMatched((event: UI5Event)=>this.onRouteMatched(event), this);
 	}
 
 	public onStateChanged(oEvent: UI5Event):void{
@@ -28,7 +27,7 @@ export default class App extends BaseController {
 
 		// Replace the URL with the new layout if a navigation arrow was used
 		if (bIsNavigationArrow) {
-			(this.getOwnerComponent() as AppComponent).getRouter().navTo(this.currentRouteName, {layout: sLayout, id: this.currentId},{}, true);
+			this.getOwnerComponent().getRouter().navTo(this.currentRouteName, {layout: sLayout, id: this.currentId},{}, true);
 		}
 	}
 	
@@ -44,9 +43,9 @@ export default class App extends BaseController {
 	}
 
 	private async updateUIElements() {
-		const oModel = ((this.getOwnerComponent() as AppComponent).getModel("appView") as JSONModel),
-			helper = await (this.getOwnerComponent() as AppComponent).getHelper(),
-			oUIState = (helper.getCurrentUIState() as UIState);
+		const oModel = (this.getOwnerComponent().getModel("appView") as JSONModel),
+			helper = await this.getOwnerComponent().getHelper(),
+			oUIState = helper.getCurrentUIState();
 		oModel.setData(oUIState);
 	}
 

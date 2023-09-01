@@ -1,9 +1,8 @@
 import BaseController from "./BaseController";
-import { system } from "sap/ui/Device";
+import Device from "sap/ui/Device";
 import UI5Event from "sap/ui/base/Event";
-import Component, { UIState } from "../Component";
+import Component from "../Component";
 import List from "sap/m/List";
-import JSONModel from "sap/ui/model/json/JSONModel";
 import ODataListBinding from "sap/ui/model/odata/v2/ODataListBinding";
 import CustomListItem from "sap/m/CustomListItem";
 import Filter from "sap/ui/model/Filter";
@@ -16,15 +15,11 @@ import Sorter from "sap/ui/model/Sorter";
 export default class Master extends BaseController {
 	private descendingSort = false;
 
-	private onMasterMatched() {
-		(this.getModel("appView") as JSONModel).setProperty("/layout", "OneColumn");
-	}
-
 	private async onListItemPress(event: UI5Event): Promise<void> {
-		const replace = !system.phone,
-			id = ((event.getSource() as CustomListItem).getBindingContext().getProperty("<%= key %>") as number),
-			helper = await (this.getOwnerComponent() as Component).getHelper(),
-			nextUIState = (helper.getNextUIState(1) as UIState);
+		const replace = !Device.system.phone,
+			id = (event.getSource<CustomListItem>().getBindingContext().getProperty("<%= key %>") as number),
+			helper = await this.getOwnerComponent().getHelper(),
+			nextUIState = helper.getNextUIState(1);
 		this.getRouter().navTo("detail", { id: id, layout: nextUIState.layout },{},replace);
 	}
 

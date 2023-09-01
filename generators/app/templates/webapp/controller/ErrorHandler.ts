@@ -1,6 +1,5 @@
 import UI5Object from "sap/ui/base/Object";
 import MessageBox from "sap/m/MessageBox";
-import { Action } from "sap/m/MessageBox";
 
 import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import UIComponent from "sap/ui/core/UIComponent";
@@ -88,7 +87,7 @@ export default class ErrorHandler extends UI5Object {
 				id: "serviceErrorMessageBox",
 				details: (responseText as unknown as string),
 				styleClass: this.component.getContentDensityClass(),
-				// actions : [Action.CLOSE],
+				actions : [MessageBox.Action.CLOSE],
 				onClose: () => {
 					this.messageOpen = false;
 				}

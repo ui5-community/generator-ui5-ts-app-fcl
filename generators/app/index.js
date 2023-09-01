@@ -43,6 +43,11 @@ module.exports = class extends Generator {
       OpenUI5: "1.90.1", //"1.60.0",
       SAPUI5: "1.90.0" //"1.77.0"
     };
+    
+		const fwkCDNDomain = {
+			OpenUI5: "sdk.openui5.org",
+			SAPUI5: "ui5.sap.com"
+		};
 
     const getTypePackageFor = function(framework, version = "99.99.99") {
       const typesName = semver.gte(version, "1.113.0") ? "types" : "ts-types-esm";
@@ -189,6 +194,19 @@ module.exports = class extends Generator {
       // appId + appURI
       this.config.set("appId", `${props.namespace}.${props.application}`);
       this.config.set("appURI", `${props.namespace.split(".").join("/")}/${props.application}`);
+      
+			// CDN domain
+			this.config.set("cdnDomain", fwkCDNDomain[props.framework]);
+
+			// default theme
+			if (semver.gte(props.frameworkVersion, "1.108.0")) {
+				this.config.set("defaultTheme", "sap_horizon");
+			} else {
+				this.config.set("defaultTheme", "sap_fiori_3");
+			}
+      
+			// more relevant parameters
+			this.config.set("gte11150", semver.gte(props.frameworkVersion, "1.115.0"));
 
       // apply OData settings
       const odataSettings = new URL(props.endpoint);
