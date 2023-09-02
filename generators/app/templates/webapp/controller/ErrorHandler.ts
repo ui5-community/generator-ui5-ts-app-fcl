@@ -1,6 +1,5 @@
 import UI5Object from "sap/ui/base/Object";
 import MessageBox from "sap/m/MessageBox";
-
 import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import UIComponent from "sap/ui/core/UIComponent";
 import AppComponent from "../Component";

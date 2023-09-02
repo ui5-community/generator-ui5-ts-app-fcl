@@ -1,13 +1,15 @@
 import UIComponent from "sap/ui/core/UIComponent";
 import models from "./model/models";
-import Device from "sap/ui/Device";
 import FlexibleColumnLayoutSemanticHelper from "sap/f/FlexibleColumnLayoutSemanticHelper";
 import { LayoutType } from "sap/f/library";
 import FlexibleColumnLayout from "sap/f/FlexibleColumnLayout";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import UI5Event from "sap/ui/base/Event";
 import View from "sap/ui/core/mvc/View";
-import ErrorHandler from "./controller/ErrorHandler";
+import ErrorHandler from "./controller/ErrorHandler";<% if (gte11150) { %>
+import Device from "sap/ui/Device";<% } else { %>
+import * as Device from "sap/ui/Device"; // for UI5 >= 1.115.0 use: import Device from "sap/ui/Device";<% } %>
+
 
 type routeParameters = {
 	arguments: {
@@ -93,8 +95,9 @@ export default class Component extends UIComponent {
 		return new Promise((resolve, reject) => {
 			const FCL = ((this.getRootControl() as View).byId('fcl') as FlexibleColumnLayout);
 			if (!FCL) {
-				(this.getRootControl() as View).attachAfterInit((oEvent: UI5Event) => {
-					resolve((oEvent.getSource<View>().byId('fcl') as FlexibleColumnLayout));
+				(this.getRootControl() as View).attachAfterInit((oEvent: UI5Event) => {<% if (gte11160) { %>
+					resolve((oEvent.getSource<View>().byId('fcl') as FlexibleColumnLayout));<% } else { %>
+					resolve(((oEvent.getSource() as View).byId('fcl') as FlexibleColumnLayout)); // for UI5 >= 1.116.0 <% } %>
 				});
 				return;
 			}
