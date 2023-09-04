@@ -3,9 +3,11 @@ import models from "./model/models";
 import FlexibleColumnLayoutSemanticHelper from "sap/f/FlexibleColumnLayoutSemanticHelper";
 import { LayoutType } from "sap/f/library";
 import FlexibleColumnLayout from "sap/f/FlexibleColumnLayout";
-import JSONModel from "sap/ui/model/json/JSONModel";
+import JSONModel from "sap/ui/model/json/JSONModel";<% if (gte11170) { %>
+import View, { View$AfterInitEvent } from "sap/ui/core/mvc/View";
+import { Router$BeforeRouteMatchedEvent } from "sap/ui/core/routing/Router";<% } else { %>
 import UI5Event from "sap/ui/base/Event";
-import View from "sap/ui/core/mvc/View";
+import View from "sap/ui/core/mvc/View"; <% } %>
 import ErrorHandler from "./controller/ErrorHandler";<% if (gte11150) { %>
 import Device from "sap/ui/Device";<% } else { %>
 import * as Device from "sap/ui/Device"; // for UI5 >= 1.115.0 use: import Device from "sap/ui/Device";<% } %>
@@ -15,15 +17,6 @@ type routeParameters = {
 	arguments: {
 		layout: string;
 	}
-};
-type startupParameters = {
-	appType:string[]
-}
-type componentData = {
-	startupParameters: startupParameters
-};
-type routeInfo = {
-	name:string;
 };
 
 /**
@@ -41,13 +34,15 @@ export default class Component extends UIComponent {
 		this.errorHandler = new ErrorHandler(this);
 		super.init();
 		this.setModel(models.createDeviceModel(), "device");
-		this.setModel(new JSONModel(), "appView");
-		this.getRouter().attachBeforeRouteMatched((event: UI5Event) => void this.onBeforeRouteMatched(event), this)
+		this.setModel(new JSONModel(), "appView");<% if (gte11170) { %>
+		this.getRouter().attachBeforeRouteMatched((event: Router$BeforeRouteMatchedEvent) => void this.onBeforeRouteMatched(event), this);<% } else { %>
+		this.getRouter().attachBeforeRouteMatched((event: UI5Event) => void this.onBeforeRouteMatched(event), this);<% } %>
 		this.getRouter().initialize();
 	}
 
-	public destroy(): void {
-		this.getRouter().detachBeforeRouteMatched((event: UI5Event) => void this.onBeforeRouteMatched(event), this);
+	public destroy(): void {<% if (gte11170) { %>
+		this.getRouter().detachBeforeRouteMatched((event: Router$BeforeRouteMatchedEvent) => void this.onBeforeRouteMatched(event), this);<% } else { %>
+		this.getRouter().detachBeforeRouteMatched((event: UI5Event) => void this.onBeforeRouteMatched(event), this);<% } %>
 		super.destroy();
 	}
 
@@ -66,8 +61,9 @@ export default class Component extends UIComponent {
 		}
 		return this.contentDensityClass;
 	}
-
-	private async onBeforeRouteMatched(oEvent: UI5Event) {
+	<% if (gte11170) { %>
+	private async onBeforeRouteMatched(oEvent: Router$BeforeRouteMatchedEvent) {<% } else { %>
+	private async onBeforeRouteMatched(oEvent: UI5Event) {<% } %>
 		const model = (this.getModel("appView") as JSONModel),
 			layout = (oEvent.getParameters() as routeParameters).arguments.layout;
 
@@ -94,10 +90,11 @@ export default class Component extends UIComponent {
 	private getFcl(): Promise<FlexibleColumnLayout> {
 		return new Promise((resolve, reject) => {
 			const FCL = ((this.getRootControl() as View).byId('fcl') as FlexibleColumnLayout);
-			if (!FCL) {
-				(this.getRootControl() as View).attachAfterInit((oEvent: UI5Event) => {<% if (gte11160) { %>
-					resolve((oEvent.getSource<View>().byId('fcl') as FlexibleColumnLayout));<% } else { %>
-					resolve(((oEvent.getSource() as View).byId('fcl') as FlexibleColumnLayout)); // for UI5 >= 1.116.0 <% } %>
+			if (!FCL) {<% if (gte11170) { %>
+				(this.getRootControl() as View).attachAfterInit((event: View$AfterInitEvent) => {
+					resolve((event.getSource().byId('fcl') as FlexibleColumnLayout));<% } else { %>
+				(this.getRootControl() as View).attachAfterInit((event: UI5Event) => {
+					resolve(((event.getSource() as View).byId('fcl') as FlexibleColumnLayout)); <% } %>
 				});
 				return;
 			}

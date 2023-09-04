@@ -1,6 +1,8 @@
 import JSONModel from "sap/ui/model/json/JSONModel";
-import BaseController from "./BaseController";
-import UI5Event from "sap/ui/base/Event";
+import BaseController from "./BaseController";<% if (gte11170) { %>
+import { Router$RouteMatchedEvent } from "sap/ui/core/routing/Router";
+import { FlexibleColumnLayout$StateChangeEvent } from "sap/f/FlexibleColumnLayout";<% } else { %>
+import UI5Event from "sap/ui/base/Event";<% } %>
 
 export type inputParameters = {
 	id: string;
@@ -15,41 +17,50 @@ export default class App extends BaseController {
 
 	public onInit(): void {
 		// apply content density mode to root view
-		this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
-		this.getOwnerComponent().getRouter().attachRouteMatched((event: UI5Event)=>this.onRouteMatched(event), this);
+		this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());<% if (gte11170) { %>
+		this.getOwnerComponent().getRouter().attachRouteMatched((event: Router$RouteMatchedEvent)=>this.onRouteMatched(event), this);<% } else { %>
+		this.getOwnerComponent().getRouter().attachRouteMatched((event: UI5Event)=>this.onRouteMatched(event), this);<% } %>
 	}
-
-	public onStateChanged(oEvent: UI5Event):void{
-		const bIsNavigationArrow =(oEvent.getParameter("isNavigationArrow") as string),
-			sLayout = (oEvent.getParameter("layout") as string);
+	<% if (gte11170) { %>
+	public onStateChanged(event: FlexibleColumnLayout$StateChangeEvent):void{
+		const isNavigationArrow = event.getParameter("isNavigationArrow"),
+		layout = event.getParameter("layout");<% } else { %>
+	public onStateChanged(event: UI5Event):void{
+		const isNavigationArrow =(event.getParameter("isNavigationArrow") as string),
+		layout = (event.getParameter("layout") as string);<% } %>
 
 		void this.updateUIElements();
 
 		// Replace the URL with the new layout if a navigation arrow was used
-		if (bIsNavigationArrow) {
-			this.getOwnerComponent().getRouter().navTo(this.currentRouteName, {layout: sLayout, id: this.currentId},{}, true);
+		if (isNavigationArrow) {
+			this.getOwnerComponent().getRouter().navTo(this.currentRouteName, {layout: layout, id: this.currentId},{}, true);
 		}
 	}
 	
+	<% if (gte11170) { %>
+	public onRouteMatched(oEvent: Router$RouteMatchedEvent):void{
+		const routeName = oEvent.getParameter("name"),
+		args = (oEvent.getParameter("arguments") as inputParameters); <% } else { %>
 	public onRouteMatched(oEvent: UI5Event):void{
-		const sRouteName = (oEvent.getParameter("name") as string),
-			oArguments = (oEvent.getParameter("arguments") as inputParameters);
+		const routeName = (oEvent.getParameter("name") as string),
+		args = (oEvent.getParameter("arguments") as inputParameters);<% } %>
 
 		void this.updateUIElements();
 
 		// Save the current route name
-		this.currentRouteName = sRouteName;
-		this.currentId = oArguments.id;
+		this.currentRouteName = routeName;
+		this.currentId = args.id;
 	}
 
 	private async updateUIElements() {
-		const oModel = (this.getOwnerComponent().getModel("appView") as JSONModel),
+		const model = (this.getOwnerComponent().getModel("appView") as JSONModel),
 			helper = await this.getOwnerComponent().getHelper(),
-			oUIState = helper.getCurrentUIState();
-		oModel.setData(oUIState);
+			uiState = helper.getCurrentUIState();
+			model.setData(uiState);
 	}
 
-	public onExit():void{
-		this.getRouter() && this.getRouter().detachRouteMatched((event: UI5Event)=>this.onRouteMatched(event), this);
+	public onExit():void{<% if (gte11170) { %>
+		this.getRouter() && this.getRouter().detachRouteMatched((event: Router$RouteMatchedEvent)=>this.onRouteMatched(event), this);<% }else{ %>
+		this.getRouter() && this.getRouter().detachRouteMatched((event: UI5Event)=>this.onRouteMatched(event), this);<% } %>
 	}
 }

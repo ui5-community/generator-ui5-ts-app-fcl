@@ -3,9 +3,10 @@ import MessageBox from "sap/m/MessageBox";
 import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import UIComponent from "sap/ui/core/UIComponent";
 import AppComponent from "../Component";
-import ResourceModel from "sap/ui/model/resource/ResourceModel";
-import UI5Event from "sap/ui/base/Event";
+import ResourceModel from "sap/ui/model/resource/ResourceModel";<% if (gte11170) { %>
+import ODataModel, { ODataModel$MetadataFailedEvent, ODataModel$RequestFailedEvent } from "sap/ui/model/odata/v2/ODataModel";<% } else { %>
 import ODataModel from "sap/ui/model/odata/v2/ODataModel";
+import UI5Event from "sap/ui/base/Event"; <% } %>
 
 type ui5Response = {
 	/**
@@ -44,12 +45,14 @@ export default class ErrorHandler extends UI5Object {
 		this.model = (component.getModel() as ODataModel);
 		this.messageOpen = false;
 		this.errorText = this.resourceBundle.getText("errorText");
-
-		this.model.attachMetadataFailed((event: UI5Event) => {
+		<% if (gte11170) { %>
+		this.model.attachMetadataFailed((event: ODataModel$MetadataFailedEvent) => {<% }else{ %>
+		this.model.attachMetadataFailed((event: UI5Event) => {<% } %>
 			const responseText = (event.getParameter("response") as ui5Response);
 			this.showServiceError(responseText);
-		});
-		this.model.attachRequestFailed((event: UI5Event) => {
+		});<% if (gte11170) { %>
+		this.model.attachRequestFailed((event: ODataModel$RequestFailedEvent) => {<% }else{ %>
+		this.model.attachRequestFailed((event: UI5Event) => {<% } %>
 			const response = (event.getParameter("response") as ui5Response);
 			// An entity that was not found in the service is also throwing a 404 error in oData.
 			// We already cover this case with a notFound target so we skip it here.
