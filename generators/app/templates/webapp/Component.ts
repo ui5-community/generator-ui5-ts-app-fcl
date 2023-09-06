@@ -3,7 +3,7 @@ import models from "./model/models";
 import FlexibleColumnLayoutSemanticHelper from "sap/f/FlexibleColumnLayoutSemanticHelper";
 import { LayoutType } from "sap/f/library";
 import FlexibleColumnLayout from "sap/f/FlexibleColumnLayout";
-import JSONModel from "sap/ui/model/json/JSONModel";<% if (gte11170) { %>
+import JSONModel from "sap/ui/model/json/JSONModel";<% if (gte11150) { %>
 import View, { View$AfterInitEvent } from "sap/ui/core/mvc/View";
 import { Router$BeforeRouteMatchedEvent } from "sap/ui/core/routing/Router";<% } else { %>
 import UI5Event from "sap/ui/base/Event";
@@ -34,13 +34,13 @@ export default class Component extends UIComponent {
 		this.errorHandler = new ErrorHandler(this);
 		super.init();
 		this.setModel(models.createDeviceModel(), "device");
-		this.setModel(new JSONModel(), "appView");<% if (gte11170) { %>
+		this.setModel(new JSONModel(), "appView");<% if (gte11150) { %>
 		this.getRouter().attachBeforeRouteMatched((event: Router$BeforeRouteMatchedEvent) => void this.onBeforeRouteMatched(event), this);<% } else { %>
 		this.getRouter().attachBeforeRouteMatched((event: UI5Event) => void this.onBeforeRouteMatched(event), this);<% } %>
 		this.getRouter().initialize();
 	}
 
-	public destroy(): void {<% if (gte11170) { %>
+	public destroy(): void {<% if (gte11150) { %>
 		this.getRouter().detachBeforeRouteMatched((event: Router$BeforeRouteMatchedEvent) => void this.onBeforeRouteMatched(event), this);<% } else { %>
 		this.getRouter().detachBeforeRouteMatched((event: UI5Event) => void this.onBeforeRouteMatched(event), this);<% } %>
 		super.destroy();
@@ -61,7 +61,7 @@ export default class Component extends UIComponent {
 		}
 		return this.contentDensityClass;
 	}
-	<% if (gte11170) { %>
+	<% if (gte11150) { %>
 	private async onBeforeRouteMatched(oEvent: Router$BeforeRouteMatchedEvent) {<% } else { %>
 	private async onBeforeRouteMatched(oEvent: UI5Event) {<% } %>
 		const model = (this.getModel("appView") as JSONModel),
@@ -90,7 +90,7 @@ export default class Component extends UIComponent {
 	private getFcl(): Promise<FlexibleColumnLayout> {
 		return new Promise((resolve, reject) => {
 			const FCL = ((this.getRootControl() as View).byId('fcl') as FlexibleColumnLayout);
-			if (!FCL) {<% if (gte11170) { %>
+			if (!FCL) {<% if (gte11150) { %>
 				(this.getRootControl() as View).attachAfterInit((event: View$AfterInitEvent) => {
 					resolve((event.getSource().byId('fcl') as FlexibleColumnLayout));<% } else { %>
 				(this.getRootControl() as View).attachAfterInit((event: UI5Event) => {
