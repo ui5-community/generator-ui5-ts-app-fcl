@@ -1,12 +1,13 @@
 import UI5Object from "sap/ui/base/Object";
-import MessageBox from "sap/m/MessageBox";
 import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import UIComponent from "sap/ui/core/UIComponent";
 import AppComponent from "../Component";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";<% if (gte11150) { %>
-import ODataModel, { ODataModel$MetadataFailedEvent, ODataModel$RequestFailedEvent } from "sap/ui/model/odata/v2/ODataModel";<% } else { %>
+import ODataModel, { ODataModel$MetadataFailedEvent, ODataModel$RequestFailedEvent } from "sap/ui/model/odata/v2/ODataModel";
+import MessageBox from "sap/m/MessageBox";<% } else { %>
 import ODataModel from "sap/ui/model/odata/v2/ODataModel";
-import UI5Event from "sap/ui/base/Event"; <% } %>
+import UI5Event from "sap/ui/base/Event"; 
+import MessageBox, { Action } from "sap/m/MessageBox";<% } %>
 
 type ui5Response = {
 	/**
@@ -88,8 +89,9 @@ export default class ErrorHandler extends UI5Object {
 			{
 				id: "serviceErrorMessageBox",
 				details: (responseText as unknown as string),
-				styleClass: this.component.getContentDensityClass(),
-				actions : [MessageBox.Action.CLOSE],
+				styleClass: this.component.getContentDensityClass(),<% if (gte11150) { %>
+				actions : [MessageBox.Action.CLOSE],<% }else{ %>
+				actions : [Action.CLOSE],<% } %>
 				onClose: () => {
 					this.messageOpen = false;
 				}

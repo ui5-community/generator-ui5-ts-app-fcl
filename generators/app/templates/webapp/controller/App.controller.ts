@@ -3,6 +3,7 @@ import BaseController from "./BaseController";<% if (gte11150) { %>
 import { Router$RouteMatchedEvent } from "sap/ui/core/routing/Router";
 import { FlexibleColumnLayout$StateChangeEvent } from "sap/f/FlexibleColumnLayout";<% } else { %>
 import UI5Event from "sap/ui/base/Event";<% } %>
+<% if (!gte11130){ %>import { UIState } from "../Component";<% } %>
 
 export type inputParameters = {
 	id: string;
@@ -54,8 +55,10 @@ export default class App extends BaseController {
 
 	private async updateUIElements() {
 		const model = (this.getOwnerComponent().getModel("appView") as JSONModel),
-			helper = await this.getOwnerComponent().getHelper(),
-			uiState = helper.getCurrentUIState();
+			helper = await this.getOwnerComponent().getHelper(),<% if (gte11130){ %>
+				uiState = helper.getCurrentUIState();<% } else { %>
+				uiState = helper.getCurrentUIState() as UIState;<% } %>
+			
 			model.setData(uiState);
 	}
 

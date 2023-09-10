@@ -12,7 +12,36 @@ import ErrorHandler from "./controller/ErrorHandler";<% if (gte11150) { %>
 import Device from "sap/ui/Device";<% } else { %>
 import * as Device from "sap/ui/Device"; // for UI5 >= 1.115.0 use: import Device from "sap/ui/Device";<% } %>
 
-
+<% if (!gte11130) { %>
+export type UIState = {
+	"layout": string;
+	"maxColumnsCount": number;
+	"columnsSizes": {
+		"beginColumn": number;
+		"midColumn": number;
+		"endColumn": number;
+	},
+	"columnsVisibility": {
+		"beginColumn": boolean;
+		"midColumn": boolean;
+		"endColumn": boolean;
+	},
+	"isFullScreen": boolean;
+	"isLogicallyFullScreen": boolean;
+	"actionButtonsInfo": {
+		"midColumn": {
+			"fullScreen": string;
+			"exitFullScreen": string;
+			"closeColumn": string;
+		},
+		"endColumn": {
+			"fullScreen": string;
+			"exitFullScreen": string;
+			"closeColumn": string;
+		}
+	}
+}
+<% } %>
 type routeParameters = {
 	arguments: {
 		layout: string;
@@ -36,13 +65,13 @@ export default class Component extends UIComponent {
 		this.setModel(models.createDeviceModel(), "device");
 		this.setModel(new JSONModel(), "appView");<% if (gte11150) { %>
 		this.getRouter().attachBeforeRouteMatched((event: Router$BeforeRouteMatchedEvent) => void this.onBeforeRouteMatched(event), this);<% } else { %>
-		this.getRouter().attachBeforeRouteMatched((event: UI5Event) => void this.onBeforeRouteMatched(event), this);<% } %>
+		this.getRouter().attachBeforeRouteMatched((event: UI5Event) => this.onBeforeRouteMatched(event), this);<% } %>
 		this.getRouter().initialize();
 	}
 
 	public destroy(): void {<% if (gte11150) { %>
 		this.getRouter().detachBeforeRouteMatched((event: Router$BeforeRouteMatchedEvent) => void this.onBeforeRouteMatched(event), this);<% } else { %>
-		this.getRouter().detachBeforeRouteMatched((event: UI5Event) => void this.onBeforeRouteMatched(event), this);<% } %>
+		this.getRouter().detachBeforeRouteMatched((event: UI5Event) => this.onBeforeRouteMatched(event), this);<% } %>
 		super.destroy();
 	}
 
@@ -69,8 +98,9 @@ export default class Component extends UIComponent {
 
 		// If there is no layout parameter, query for the default level 0 layout (normally OneColumn)
 		if (!layout) {
-			const helper = await this.getHelper() ;
-			const nextUIState = helper.getNextUIState(0);
+			const helper = await this.getHelper() ;<% if (gte11130){ %>
+			const nextUIState = helper.getNextUIState(0);<% } else { %>
+			const nextUIState = helper.getNextUIState(0) as UIState;<% } %>
 			model.setProperty("/layout", nextUIState.layout);
 			return;
 		}
@@ -90,9 +120,11 @@ export default class Component extends UIComponent {
 	private getFcl(): Promise<FlexibleColumnLayout> {
 		return new Promise((resolve, reject) => {
 			const FCL = ((this.getRootControl() as View).byId('fcl') as FlexibleColumnLayout);
-			if (!FCL) {<% if (gte11150) { %>
+			if (!FCL) {<% if (gte11170) { %>
 				(this.getRootControl() as View).attachAfterInit((event: View$AfterInitEvent) => {
-					resolve((event.getSource().byId('fcl') as FlexibleColumnLayout));<% } else { %>
+					resolve((event.getSource().byId('fcl') as FlexibleColumnLayout));<% } else if (gte11150) { %>
+				(this.getRootControl() as View).attachAfterInit((event: View$AfterInitEvent) => {
+					resolve(((event.getSource() as View).byId('fcl') as FlexibleColumnLayout)); <% } else { %>
 				(this.getRootControl() as View).attachAfterInit((event: UI5Event) => {
 					resolve(((event.getSource() as View).byId('fcl') as FlexibleColumnLayout)); <% } %>
 				});

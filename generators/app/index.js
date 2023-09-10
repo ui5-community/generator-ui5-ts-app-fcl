@@ -206,6 +206,7 @@ module.exports = class extends Generator {
       }
 
       // more relevant parameters
+      this.config.set("gte11130", semver.gte(props.frameworkVersion, "1.113.0"));
       this.config.set("gte11150", semver.gte(props.frameworkVersion, "1.115.0"));
       this.config.set("gte11160", semver.gte(props.frameworkVersion, "1.116.0"));
       this.config.set("gte11170", semver.gte(props.frameworkVersion, "1.117.0"));
