@@ -1,9 +1,10 @@
 import BaseController from "./BaseController";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import formatter from "../model/formatter";
-import UI5Event from "sap/ui/base/Event";
 import ODataModel from "sap/ui/model/odata/v2/ODataModel";
-import {inputParameters} from "./App.controller";
+import {inputParameters} from "./App.controller";<% if (gte11150) { %>
+import { Route$MatchedEvent } from "sap/ui/core/routing/Route";<% } else { %>
+import UI5Event from "sap/ui/base/Event";<% } %>
 
 /**
  * @namespace <%= appId %>.controller
@@ -17,11 +18,13 @@ export default class Detail extends BaseController {
 			delay:0
 		});
 		this.setModel(viewModel, "detailView");
-
-		this.getRouter().getRoute("detail").attachPatternMatched((event:UI5Event)=>this.onObjectMatched(event), this);
+		<% if (gte11150) { %>
+		this.getRouter().getRoute("detail").attachPatternMatched((event:Route$MatchedEvent)=>this.onObjectMatched(event), this);<% } else { %>
+		this.getRouter().getRoute("detail").attachPatternMatched((event:UI5Event)=>this.onObjectMatched(event), this);<% } %>
 	}
-
-	private onObjectMatched(event: UI5Event): void {
+	<% if (gte11150) { %>
+	private onObjectMatched(event: Route$MatchedEvent): void { <% } else { %>
+	private onObjectMatched(event: UI5Event): void {<% } %>
 		const viewModel = (this.getModel("detailView") as JSONModel);
 
 		this.id = (event.getParameter("arguments") as inputParameters).id || this.id || "0";

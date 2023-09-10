@@ -13,7 +13,7 @@ const glob = require("glob");
 const semver = require("semver");
 const packageJson = require('package-json');
 
-const {isValidUrl, ODataMetadata} = require("./utils");
+const { isValidUrl, ODataMetadata } = require("./utils");
 
 module.exports = class extends Generator {
 
@@ -36,7 +36,7 @@ module.exports = class extends Generator {
     }
 
     const entities = {
-      Products: ["Id", "Name","Price"],
+      Products: ["Id", "Name", "Price"],
       Suppliers: ["Id", "Test", "more"]
     };
     const minFwkVersion = {
@@ -44,7 +44,12 @@ module.exports = class extends Generator {
       SAPUI5: "1.90.0" //"1.77.0"
     };
 
-    const getTypePackageFor = function(framework, version = "99.99.99") {
+    const fwkCDNDomain = {
+      OpenUI5: "sdk.openui5.org",
+      SAPUI5: "ui5.sap.com"
+    };
+
+    const getTypePackageFor = function (framework, version = "99.99.99") {
       const typesName = semver.gte(version, "1.113.0") ? "types" : "ts-types-esm";
       return `@${framework.toLowerCase()}/${typesName}`;
     };
@@ -181,7 +186,7 @@ module.exports = class extends Generator {
       // apply the properties
       this.config.set(props);
       this.config.set("framework", props.framework);
-      
+
       // determine the ts-types and version
       this.config.set("tstypes", getTypePackageFor(props.framework, props.frameworkVersion));
       this.config.set("tstypesVersion", props.frameworkVersion);
@@ -190,11 +195,27 @@ module.exports = class extends Generator {
       this.config.set("appId", `${props.namespace}.${props.application}`);
       this.config.set("appURI", `${props.namespace.split(".").join("/")}/${props.application}`);
 
+      // CDN domain
+      this.config.set("cdnDomain", fwkCDNDomain[props.framework]);
+
+      // default theme
+      if (semver.gte(props.frameworkVersion, "1.108.0")) {
+        this.config.set("defaultTheme", "sap_horizon");
+      } else {
+        this.config.set("defaultTheme", "sap_fiori_3");
+      }
+
+      // more relevant parameters
+      this.config.set("gte11130", semver.gte(props.frameworkVersion, "1.113.0"));
+      this.config.set("gte11150", semver.gte(props.frameworkVersion, "1.115.0"));
+      this.config.set("gte11160", semver.gte(props.frameworkVersion, "1.116.0"));
+      this.config.set("gte11170", semver.gte(props.frameworkVersion, "1.117.0"));
+
       // apply OData settings
       const odataSettings = new URL(props.endpoint);
       this.config.set("origin", odataSettings.origin);
       this.config.set("path", odataSettings.pathname);
-      this.config.set("pathPrefix",`/${odataSettings.pathname.substring(1).split('/')[0]}`);
+      this.config.set("pathPrefix", `/${odataSettings.pathname.substring(1).split('/')[0]}`);
     });
   }
 

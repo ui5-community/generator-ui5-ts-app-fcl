@@ -1,6 +1,6 @@
 # build results
-webapp
 dist
+coverage
 
 # Logs
 logs
@@ -13,16 +13,4 @@ yarn-error.log*
 node_modules/
 
 .DS_Store
-
-# do not add dependency lock files to this repo because it should remain independent from specific dependency managers
-package-lock.json
-yarn.lock
-
-# Other ignores
-# .scp/
-# .env
-# Makefile*.mta
-# mta_archives
-# mta-*
-# resources
-# archive.zip
+.env

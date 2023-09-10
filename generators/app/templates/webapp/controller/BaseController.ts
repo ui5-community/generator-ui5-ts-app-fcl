@@ -1,5 +1,6 @@
 import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import Controller from "sap/ui/core/mvc/Controller";
+import AppComponent from "../Component";
 import History from "sap/ui/core/routing/History";
 import Router from "sap/ui/core/routing/Router";
 import UIComponent from "sap/ui/core/UIComponent";
@@ -11,12 +12,18 @@ import ResourceModel from "sap/ui/model/resource/ResourceModel";
  */
 export default class BaseController extends Controller {	
 	/**
-	 * Convenience method for accessing the router in every controller of the application.
-	 * @public
-	 * @returns {sap.ui.core.routing.Router} the router for this component
+	 * Convenience method for accessing the component of the controller's view.
+	 * @returns The component of the controller's view
+	 */
+	public getOwnerComponent(): AppComponent {
+		return super.getOwnerComponent() as AppComponent;
+	}
+	/**
+	 * Convenience method to get the components' router instance.
+	 * @returns The router instance
 	 */
 	public getRouter(): Router {
-		return (this.getOwnerComponent() as UIComponent).getRouter();
+		return UIComponent.getRouterFor(this);
 	}
 
 	/**

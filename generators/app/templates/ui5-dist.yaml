@@ -1,7 +1,11 @@
-specVersion: "2.0"
+specVersion: "3.0"
 metadata:
   name: <%= appId %>
 type: application
+resources:
+  configuration:
+    paths:
+      webapp: dist
 framework:
   name: <%= framework %>
   version: "<%= frameworkVersion %>"
@@ -11,7 +15,7 @@ framework:
     - name: sap.ui.core
     - name: sap.ui.layout
     - name: sap.ui.table
-    - name: themelib_sap_fiori_3
+    - name: themelib_<%= defaultTheme %>
 server:
   customMiddleware:
   - name: fiori-tools-proxy
@@ -21,8 +25,3 @@ server:
       backend:
       - path: <%= pathPrefix %>
         url: <%= origin %>
-  - name: fiori-tools-appreload
-    afterMiddleware: compression
-    configuration:
-     port: 35729
-     path: webapp
