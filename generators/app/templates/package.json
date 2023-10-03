@@ -21,15 +21,15 @@
     "deploy": "npm run build && fiori deploy --config ui5-deploy.yaml && rimraf archive.zip"
   },
   "devDependencies": {
-    "@sap/ux-ui5-tooling": "^1.10.6",
+    "@sap/ux-ui5-tooling": "^1.11.1",
     "<%= tstypes %>": "<%= tstypesVersion %>",
-    "@typescript-eslint/eslint-plugin": "^5.9.1",
-    "@typescript-eslint/parser": "^5.9.1",
-    "@ui5/cli": "^3.3.4",
-    "eslint": "^8.46.0",
-    "rimraf": "^5.0.1",
-    "typescript": "^5.1.6",
-    "ui5-middleware-livereload": "^3.0.0",
-    "ui5-tooling-transpile": "^3.0.0"
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "@ui5/cli": "^3.6.1",
+    "eslint": "^8.50.0",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.2.2",
+    "ui5-middleware-livereload": "^3.0.1",
+    "ui5-tooling-transpile": "^3.2.5"
   }
 }
