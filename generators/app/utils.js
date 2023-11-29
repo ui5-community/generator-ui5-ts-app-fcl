@@ -47,12 +47,12 @@ module.exports = {
                         keys: ensureArray(entityType.Key?.PropertyRef)?.map(key => {
                             return key.Name;
                         }),
-                        properties: ensureArray(entityType.Property.map(prop => {
+                        properties: ensureArray(entityType.Property)?.map(prop => {
                             return {
                                 name: prop.Name,
                                 type: prop.Type
                             };
-                        }))
+                        })
                     };
                 });
             });
