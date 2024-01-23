@@ -7,7 +7,7 @@
 		"title": "{{appTitle}}",
 		"description": "{{appDescription}}",
 		"applicationVersion": {
-			"version": "1.0.0"
+			"version": "${version}"
 		},
 		"resources": "resources.json",
 		"dataSources": {
