@@ -10,7 +10,7 @@ import ResourceModel from "sap/ui/model/resource/ResourceModel";
 /**
  * @namespace <%= appId %>.controller
  */
-export default class BaseController extends Controller {	
+export default class BaseController extends Controller {
 	/**
 	 * Convenience method for accessing the component of the controller's view.
 	 * @returns The component of the controller's view
@@ -48,12 +48,12 @@ export default class BaseController extends Controller {
 	}
 
 	/**
-	 * Convenience method for getting the resource bundle.
-	 * @public
-	 * @returns {sap.ui.model.resource.ResourceModel} the resourceModel of the component
+	 * Convenience method for getting the i18n resource bundle of the component.
+	 * @returns The i18n resource bundle of the component
 	 */
-	public getResourceBundle(): ResourceBundle {
-		return (((this.getOwnerComponent() as UIComponent).getModel("i18n") as ResourceModel).getResourceBundle() as ResourceBundle);
+	public getResourceBundle(): Promise<ResourceBundle> {
+		const oModel = this.getOwnerComponent().getModel("i18n") as ResourceModel;
+		return oModel.getResourceBundle();
 	}
 
 	/**
