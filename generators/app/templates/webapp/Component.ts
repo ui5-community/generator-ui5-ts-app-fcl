@@ -56,7 +56,8 @@ export default class Component extends UIComponent {
 	private errorHandler: ErrorHandler;
 
 	public static metadata = {
-		manifest: "json"
+		manifest: "json",
+		interfaces: ["sap.ui.core.IAsyncContentCreation"]
 	};
 
 	public init(): void {

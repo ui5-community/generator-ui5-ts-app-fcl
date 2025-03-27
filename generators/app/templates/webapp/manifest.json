@@ -42,7 +42,6 @@
 		"rootView": {
 			"viewName": "<%= appId %>.view.App",
 			"type": "XML",
-			"async": true,
 			"id": "app"
 		},
 		"dependencies": {
@@ -73,7 +72,13 @@
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
 				"settings": {
-					"bundleName": "<%= appId %>.i18n.i18n"
+					"bundleName": "<%= appId %>.i18n.i18n",
+					"supportedLocales": [
+						"en",
+						"de"
+					],
+					"fallbackLocale": "en",
+					"async": true
 				}
 			}
 		},
@@ -93,8 +98,7 @@
 				"controlAggregation": "beginColumnPages",
 				"bypassed": {
 					"target": "notFound"
-				},
-				"async": true
+				}
 			},
 			"routes": [
 				{
