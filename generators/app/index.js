@@ -210,6 +210,7 @@ module.exports = class extends Generator {
       this.config.set("gte11150", semver.gte(props.frameworkVersion, "1.115.0"));
       this.config.set("gte11160", semver.gte(props.frameworkVersion, "1.116.0"));
       this.config.set("gte11170", semver.gte(props.frameworkVersion, "1.117.0"));
+      this.config.set("lt11200", semver.lt(props.frameworkVersion, "1.120.0"));
 
       // apply OData settings
       const odataSettings = new URL(props.endpoint);

@@ -119,19 +119,19 @@ export default class Component extends UIComponent {
 	}
 
 	private getFcl(): Promise<FlexibleColumnLayout> {
-		return new Promise((resolve, reject) => {
-			const FCL = ((this.getRootControl() as View).byId('fcl') as FlexibleColumnLayout);
+		return this.rootControlLoaded().then((rootControl) => {
+			const FCL = ((rootControl as View).byId('fcl') as FlexibleColumnLayout);
 			if (!FCL) {<% if (gte11170) { %>
-				(this.getRootControl() as View).attachAfterInit((event: View$AfterInitEvent) => {
-					resolve((event.getSource().byId('fcl') as FlexibleColumnLayout));<% } else if (gte11150) { %>
-				(this.getRootControl() as View).attachAfterInit((event: View$AfterInitEvent) => {
-					resolve(((event.getSource() as View).byId('fcl') as FlexibleColumnLayout)); <% } else { %>
-				(this.getRootControl() as View).attachAfterInit((event: UI5Event) => {
-					resolve(((event.getSource() as View).byId('fcl') as FlexibleColumnLayout)); <% } %>
+				(rootControl as View).attachAfterInit((event: View$AfterInitEvent) => {
+					return (event.getSource().byId('fcl') as FlexibleColumnLayout);<% } else if (gte11150) { %>
+				(rootControl as View).attachAfterInit((event: View$AfterInitEvent) => {
+					return ((event.getSource() as View).byId('fcl') as FlexibleColumnLayout); <% } else { %>
+				(rootControl as View).attachAfterInit((event: UI5Event) => {
+					return ((event.getSource() as View).byId('fcl') as FlexibleColumnLayout); <% } %>
 				});
 				return;
 			}
-			resolve(FCL);
+			return FCL;
 		});
 	}
 }
