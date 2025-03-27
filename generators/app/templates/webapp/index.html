@@ -13,7 +13,8 @@
 			src="resources/sap-ui-core.js"
 			data-sap-ui-resourceroots='{
 				"<%= appId %>": "./"
-			}'
+			}'<% if (lt11200) { %>
+			data-sap-ui-theme="<%= defaultTheme %>"<% } %>
 			data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
 			data-sap-ui-async="true"
 			data-sap-ui-compatVersion="edge"

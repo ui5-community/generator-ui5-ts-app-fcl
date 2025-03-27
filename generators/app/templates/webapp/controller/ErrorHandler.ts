@@ -6,7 +6,7 @@ import ResourceModel from "sap/ui/model/resource/ResourceModel";<% if (gte11150)
 import ODataModel, { ODataModel$MetadataFailedEvent, ODataModel$RequestFailedEvent } from "sap/ui/model/odata/v2/ODataModel";
 import MessageBox from "sap/m/MessageBox";<% } else { %>
 import ODataModel from "sap/ui/model/odata/v2/ODataModel";
-import UI5Event from "sap/ui/base/Event"; 
+import UI5Event from "sap/ui/base/Event";
 import MessageBox, { Action } from "sap/m/MessageBox";<% } %>
 
 type ui5Response = {
@@ -41,16 +41,14 @@ export default class ErrorHandler extends UI5Object {
 	constructor(component: UIComponent) {
 		super();
 
-		this.resourceBundle = ((component.getModel("i18n") as ResourceModel).getResourceBundle() as ResourceBundle);
 		this.component = (component as AppComponent);
 		this.model = (component.getModel() as ODataModel);
 		this.messageOpen = false;
-		this.errorText = this.resourceBundle.getText("errorText");
 		<% if (gte11150) { %>
 		this.model.attachMetadataFailed((event: ODataModel$MetadataFailedEvent) => {<% }else{ %>
 		this.model.attachMetadataFailed((event: UI5Event) => {<% } %>
 			const responseText = (event.getParameter("response") as ui5Response);
-			this.showServiceError(responseText);
+			void this.showServiceError(responseText);
 		});<% if (gte11150) { %>
 		this.model.attachRequestFailed((event: ODataModel$RequestFailedEvent) => {<% }else{ %>
 		this.model.attachRequestFailed((event: UI5Event) => {<% } %>
@@ -59,7 +57,7 @@ export default class ErrorHandler extends UI5Object {
 			// We already cover this case with a notFound target so we skip it here.
 			// A request that cannot be sent to the server is a technical error that we have to handle though
 			if (response.statusCode !== "404" || (response.statusCode == "404" && response.responseText.indexOf("Cannot POST") === 0)) {
-				this.showServiceError(response);
+				void this.showServiceError(response);
 			}
 		});
 	}
@@ -70,12 +68,17 @@ export default class ErrorHandler extends UI5Object {
 	 * @param {string} sDetails a technical error to be displayed on request
 	 * @private
 	 */
-	private showServiceError(details: ui5Response) {
+	private async showServiceError(details: ui5Response) {
 		if (this.messageOpen) {
 			return;
 		}
 		this.messageOpen = true;
 		let responseText:any;
+
+		if(!this.errorText){
+			this.resourceBundle = await ((this.component.getModel("i18n") as ResourceModel).getResourceBundle() as Promise<ResourceBundle>);
+			this.errorText = this.resourceBundle.getText("errorText");
+		}
 
 		if(details.responseText){
 			try{
