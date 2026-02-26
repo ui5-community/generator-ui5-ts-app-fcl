@@ -1,22 +1,16 @@
-"use strict";
-const Generator = require("yeoman-generator");
-// patches the Generator for the install tasks as new custom install
-// tasks produce ugly errors! (Related issue: https://github.com/yeoman/environment/issues/309)
-require("lodash").extend(Generator.prototype, require("yeoman-generator/lib/actions/install"));
+import chalk from "chalk";
+import { glob } from "glob";
+import { join } from "node:path";
+import url from "node:url";
+import packageJson from "package-json";
+import semver from "semver";
+import Generator from "yeoman-generator";
+import yosay from "yosay";
+import { isValidUrl, ODataMetadata } from "./utils.js";
 
-const path = require("path");
-const { URL } = require('url');
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
-const chalk = require("chalk");
-const yosay = require("yosay");
-const glob = require("glob");
-const semver = require("semver");
-const packageJson = require('package-json');
-
-const { isValidUrl, ODataMetadata } = require("./utils");
-
-module.exports = class extends Generator {
-
+export default class extends Generator {
   static displayName = "Create a new UI5 TypeScript application using the FlexibleColumnLayout";
 
   constructor(args, opts) {
@@ -27,7 +21,6 @@ module.exports = class extends Generator {
   }
 
   prompting() {
-
     // Have Yeoman greet the user.
     if (!this.options.embedded) {
       this.log(
@@ -35,10 +28,6 @@ module.exports = class extends Generator {
       );
     }
 
-    const entities = {
-      Products: ["Id", "Name", "Price"],
-      Suppliers: ["Id", "Test", "more"]
-    };
     const minFwkVersion = {
       OpenUI5: "1.90.1", //"1.60.0",
       SAPUI5: "1.90.0" //"1.77.0"
@@ -85,7 +74,7 @@ module.exports = class extends Generator {
         name: "endpoint",
         message: "Which endpoint do you want to use for your OData service?",
         validate: async (url) => {
-          if (isValidUrl(url, ['http', 'https'])) {
+          if (isValidUrl(url, ["http", "https"])) {
             try {
               metadata = await ODataMetadata.load(url);
               return !!metadata;
@@ -166,7 +155,7 @@ module.exports = class extends Generator {
         type: "input",
         name: "author",
         message: "Who is the author of the application?",
-        default: this.user.git.name()
+        default: this.user?.git?.name()
       },
       {
         type: "confirm",
@@ -216,14 +205,14 @@ module.exports = class extends Generator {
       const odataSettings = new URL(props.endpoint);
       this.config.set("origin", odataSettings.origin);
       this.config.set("path", odataSettings.pathname);
-      this.config.set("pathPrefix", `/${odataSettings.pathname.substring(1).split('/')[0]}`);
+      this.config.set("pathPrefix", `/${odataSettings.pathname.substring(1).split("/")[0]}`);
     });
   }
 
   writing() {
     const oConfig = this.config.getAll();
 
-    this.sourceRoot(path.join(__dirname, "templates"));
+    this.sourceRoot(join(__dirname, "templates"));
     glob
       .sync("**", {
         cwd: this.sourceRoot(),
@@ -243,22 +232,19 @@ module.exports = class extends Generator {
 
   install() {
     this.config.set("setupCompleted", true);
-    // needed as long as the Yeoman 5.x installer produces
-    // ugly error messages while looking for package.json
-    this.installDependencies({
-      bower: false,
-      npm: true
+    this.spawnSync("npm", ["install"], {
+      cwd: this.destinationPath()
     });
   }
 
   end() {
-    this.spawnCommandSync("git", ["init", "--quiet"], {
+    this.spawnSync("git", ["init", "--quiet"], {
       cwd: this.destinationPath()
     });
-    this.spawnCommandSync("git", ["add", "."], {
+    this.spawnSync("git", ["add", "."], {
       cwd: this.destinationPath()
     });
-    this.spawnCommandSync(
+    this.spawnSync(
       "git",
       [
         "commit",
