@@ -1,14 +1,14 @@
 import chalk from "chalk";
 import { glob } from "glob";
 import { join } from "node:path";
-import url from "node:url";
+import { fileURLToPath } from "node:url";
 import packageJson from "package-json";
 import semver from "semver";
 import Generator from "yeoman-generator";
 import yosay from "yosay";
 import { isValidUrl, ODataMetadata } from "./utils.js";
 
-const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 export default class extends Generator {
   static displayName = "Create a new UI5 TypeScript application using the FlexibleColumnLayout";
