@@ -29,10 +29,6 @@ export class ODataMetadata {
     this.entityTypes = {};
     schemas.forEach(schema => {
       ensureArray(schema.EntityType)?.forEach(entityType => {
-        let keys = entityType.Key?.PropertyRef;
-        if (!Array.isArray(keys)) {
-          keys = [keys];
-        }
         this.entityTypes[`${schema.Namespace}.${entityType.Name}`] = {
           namespace: schema.Namespace,
           name: entityType.Name,
