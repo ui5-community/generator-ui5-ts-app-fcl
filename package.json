@@ -5,7 +5,7 @@
   "main": "generators/app/index.js",
   "type": "module",
   "scripts": {
-    "test": "cd test && yo ../../generator-ui5-ts-app-fcl"
+    "test": "cd test && yo ../generators/app/index.js"
   },
   "keywords": [
     "ui5",
