@@ -19,12 +19,12 @@ export default class extends Generator {
       customInstallTask: "disabled"
     });
 
-		// declare the arguments and options of the generator, so they can be shown by --help
-		this.argument("appNamespace", { // "appNamespace" is used here to avoid a conflict with the "namespace" property, which is natively in this.options, where these arguments also end up
-			type: String,
-			required: false,
-			description: "The namespace for the application, e.g. com.myorg.myapp"
-		});
+    // declare the arguments and options of the generator, so they can be shown by --help
+    this.argument("appNamespace", { // "appNamespace" is used here to avoid a conflict with the "namespace" property, which is natively in this.options, where these arguments also end up
+      type: String,
+      required: false,
+      description: "The namespace for the application, e.g. com.myorg.myapp"
+    });
 
     this.argument("endpoint", {
       type: String,
@@ -129,21 +129,21 @@ export default class extends Generator {
     // prepare the needed prompts
     let metadata;
     const prompts = [];
-		if (!this.options.appNamespace) { // only prompt the user when not provided already
-			prompts.push({
-				type: "input",
-				name: "namespace",
-				message: "Enter your application id (namespace)?",
-				validate: (s) => {
-					if (/^[a-z0-9][a-z0-9_.]*$/g.test(s)) {
-						return true;
-					}
+    if (!this.options.appNamespace) { // only prompt the user when not provided already
+      prompts.push({
+        type: "input",
+        name: "namespace",
+        message: "Enter your application id (namespace)?",
+        validate: (s) => {
+          if (/^[a-z0-9][a-z0-9_.]*$/g.test(s)) {
+            return true;
+          }
 
-					return "Please use lowercase alpha numeric characters, underscores and dots only for the namespace.";
-				},
-				default: "com.myorg.myapp"
-			});
-		}
+          return "Please use lowercase alpha numeric characters, underscores and dots only for the namespace.";
+        },
+        default: "com.myorg.myapp"
+      });
+    }
 
     if (!this.options.endpoint) {
       prompts.push({
@@ -267,17 +267,17 @@ export default class extends Generator {
     }
 
     return this.prompt(prompts).then((props) => {
-			// merge pre-filled arguments with prompt answers
-			Object.values(this._arguments).map((v) => v.name).forEach((key) => {
-				props[key] = props[key] || this.options[key];
-			});
-			props.namespace = props.namespace || props.appNamespace; // use "namespace" from here ("appNamespace" was used in the CLI to prevent a conflict with native this.options content)
+      // merge pre-filled arguments with prompt answers
+      Object.values(this._arguments).map((v) => v.name).forEach((key) => {
+        props[key] = props[key] || this.options[key];
+      });
+      props.namespace = props.namespace || props.appNamespace; // use "namespace" from here ("appNamespace" was used in the CLI to prevent a conflict with native this.options content)
 
-			// use the namespace and the application name as new subdirectory
-			if (props.newdir) {
-				this.destinationRoot(this.destinationPath(`${props.namespace}`));
-			}
-			delete props.newdir;
+      // use the namespace and the application name as new subdirectory
+      if (props.newdir) {
+        this.destinationRoot(this.destinationPath(`${props.namespace}`));
+      }
+      delete props.newdir;
 
       // apply the properties
       this.config.set(props);
@@ -287,9 +287,9 @@ export default class extends Generator {
       this.config.set("tstypes", getTypePackageFor(props.framework, props.frameworkVersion));
       this.config.set("tstypesVersion", props.frameworkVersion);
 
-			// appId + appURI
-			this.config.set("appId", `${props.namespace}`);
-			this.config.set("appURI", `${props.namespace.split(".").join("/")}`);
+      // appId + appURI
+      this.config.set("appId", `${props.namespace}`);
+      this.config.set("appURI", `${props.namespace.split(".").join("/")}`);
 
       // CDN domain
       this.config.set("cdnDomain", fwkCDNDomain[props.framework]);
@@ -348,9 +348,9 @@ export default class extends Generator {
       this.spawnSync("git", ["add", "."], {
         cwd: this.destinationPath()
       });
-			this.spawnSync("git", ["commit", "--quiet", "--allow-empty", "-m", "Initial commit"], {
-				cwd: this.destinationPath()
-			});
+      this.spawnSync("git", ["commit", "--quiet", "--allow-empty", "-m", "Initial commit"], {
+        cwd: this.destinationPath()
+      });
     }
   }
 };
