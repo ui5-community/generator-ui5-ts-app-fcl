@@ -145,6 +145,15 @@ export default class extends Generator {
       });
     }
 
+    if (this.options.endpoint) {
+      try {
+        metadata = await ODataMetadata.load(this.options.endpoint);
+      } catch (err) {
+        this.log(chalk.red(`Failed to load OData metadata from the provided endpoint! Please check the endpoint and your network connection.\n${err.message}`));
+        delete this.options.endpoint;
+      }
+    }
+
     if (!this.options.endpoint) {
       prompts.push({
         type: "input",
