@@ -92,9 +92,19 @@ export default class extends Generator {
       delete this.options.appNamespace;
     }
 
-    if (this.options.endpoint && !isValidUrl(this.options.endpoint, ["http", "https"])) {
-      this.log(chalk.red("The provided OData endpoint is not valid! Please use a valid HTTP(S) URL."));
-      delete this.options.endpoint;
+    let metadata;
+    if (this.options.endpoint) {
+      if (isValidUrl(this.options.endpoint, ["http", "https"])) {
+        try {
+          metadata = await ODataMetadata.load(this.options.endpoint);
+        } catch (err) {
+          this.log(chalk.red(`Failed to load OData metadata from the provided endpoint! Please check the endpoint and your network connection.\n${err.message}`));
+          delete this.options.endpoint;
+        }
+      } else {
+        this.log(chalk.red("The provided OData endpoint is not valid! Please use a valid HTTP(S) URL."));
+        delete this.options.endpoint;
+      }
     }
 
     if (this.options.framework && !["OpenUI5", "SAPUI5"].includes(this.options.framework)) {
@@ -127,7 +137,6 @@ export default class extends Generator {
     }
 
     // prepare the needed prompts
-    let metadata;
     const prompts = [];
     if (!this.options.appNamespace) { // only prompt the user when not provided already
       prompts.push({
@@ -143,15 +152,6 @@ export default class extends Generator {
         },
         default: "com.myorg.myapp"
       });
-    }
-
-    if (this.options.endpoint) {
-      try {
-        metadata = await ODataMetadata.load(this.options.endpoint);
-      } catch (err) {
-        this.log(chalk.red(`Failed to load OData metadata from the provided endpoint! Please check the endpoint and your network connection.\n${err.message}`));
-        delete this.options.endpoint;
-      }
     }
 
     if (!this.options.endpoint) {
