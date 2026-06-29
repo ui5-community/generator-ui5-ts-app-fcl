@@ -6,9 +6,8 @@ import FilterOperator from "sap/ui/model/FilterOperator";
 import Sorter from "sap/ui/model/Sorter";<% if (gte11150) { %>
 import Device from "sap/ui/Device";<% } else { %>
 import * as Device from "sap/ui/Device"; // for UI5 >= 1.115.0 use: import Device from "sap/ui/Device";<% } %><% if (gte11150) { %>
-import { CustomListItem$DetailClickEvent } from "sap/ui/webc/main/CustomListItem";
-import { SearchField$SearchEvent } from "sap/m/SearchField";
-import { Button$PressEvent } from "sap/m/Button";<% } else { %>
+import { ListItemBase$PressEvent } from "sap/m/ListItemBase";
+import { SearchField$SearchEvent } from "sap/m/SearchField";<% } else { %>
 import UI5Event from "sap/ui/base/Event";<% } %>
 <% if (!gte11130){ %>import { UIState } from "../Component";<% } %>
 <% if (!gte11170){ %>import CustomListItem from "sap/m/CustomListItem";<% } %>
@@ -19,10 +18,10 @@ import UI5Event from "sap/ui/base/Event";<% } %>
 export default class Master extends BaseController {
 	private descendingSort = false;
 	<% if (gte11170) { %>
-	private async onListItemPress(event: CustomListItem$DetailClickEvent): Promise<void> {
+	private async onListItemPress(event: ListItemBase$PressEvent): Promise<void> {
 		const replace = !Device.system.phone,
 			id = (event.getSource().getBindingContext().getProperty("<%= key %>") as number),<% } else if (gte11150) { %>
-	private async onListItemPress(event: CustomListItem$DetailClickEvent): Promise<void> {
+	private async onListItemPress(event: ListItemBase$PressEvent): Promise<void> {
 		const replace = !Device.system.phone,
 			id = ((event.getSource() as CustomListItem).getBindingContext().getProperty("<%= key %>") as number),<% } else { %>
 	private async onListItemPress(event: UI5Event): Promise<void> {
@@ -46,9 +45,8 @@ export default class Master extends BaseController {
 
 		((this.getView().byId("productsTable") as List).getBinding("items") as ODataListBinding).filter(tableSearchState, "Application");
 	}
-	<% if (gte11150) { %>
-	private onSort(event: Button$PressEvent) {<% } else { %>
-	private onSort(event: UI5Event) {<% } %>
+
+	private onSort() {
 		this.descendingSort = !this.descendingSort;
 		const view = this.getView(),
 			table = (view.byId("productsTable") as List),

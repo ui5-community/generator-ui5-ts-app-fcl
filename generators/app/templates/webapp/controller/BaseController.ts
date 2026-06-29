@@ -66,7 +66,6 @@ export default class BaseController extends Controller {
 		const sPreviousHash = History.getInstance().getPreviousHash();
 
 		if (sPreviousHash !== undefined) {
-			// eslint-disable-next-line
 			history.go(-1);
 		} else {
 			this.getRouter().navTo("master", {},{}, true);
