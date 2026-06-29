@@ -1,3 +1,4 @@
 node_modules
 test/*/
+test/com.myorg.myapp
 .DS_Store
