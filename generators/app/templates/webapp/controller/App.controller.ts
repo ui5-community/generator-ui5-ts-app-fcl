@@ -14,13 +14,14 @@ export type inputParameters = {
  */
 export default class App extends BaseController {
 	private currentRouteName: string;
-	private currentId: string;
+	private currentId: string;<% if (gte11150) { %>
+	private onRouteMatchedHandler = (event: Router$RouteMatchedEvent) => this.onRouteMatched(event);<% } else { %>
+	private onRouteMatchedHandler = (event: UI5Event) => this.onRouteMatched(event);<% } %>
 
 	public onInit(): void {
 		// apply content density mode to root view
-		this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());<% if (gte11150) { %>
-		this.getOwnerComponent().getRouter().attachRouteMatched((event: Router$RouteMatchedEvent)=>this.onRouteMatched(event), this);<% } else { %>
-		this.getOwnerComponent().getRouter().attachRouteMatched((event: UI5Event)=>this.onRouteMatched(event), this);<% } %>
+		this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
+		this.getOwnerComponent().getRouter().attachRouteMatched(this.onRouteMatchedHandler, this);
 	}
 	<% if (gte11150) { %>
 	public onStateChanged(event: FlexibleColumnLayout$StateChangeEvent):void{
@@ -62,12 +63,9 @@ export default class App extends BaseController {
 			model.setData(uiState);
 	}
 
-	public onExit():void{<% if (gte11150) { %>
+	public onExit():void{
 		if (this.getRouter()) {
-			this.getRouter().detachRouteMatched((event: Router$RouteMatchedEvent)=>this.onRouteMatched(event), this);
-		}<% }else{ %>
-		if (this.getRouter()) {
-			this.getRouter().detachRouteMatched((event: UI5Event)=>this.onRouteMatched(event), this);
-		}<% } %>
+			this.getRouter().detachRouteMatched(this.onRouteMatchedHandler, this);
+		}
 	}
 }

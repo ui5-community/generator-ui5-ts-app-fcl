@@ -73,7 +73,7 @@ export default class ErrorHandler extends UI5Object {
 			return;
 		}
 		this.messageOpen = true;
-		let responseText: unknown;
+		let responseText = "";
 
 		if(!this.errorText){
 			this.resourceBundle = await (this.component.getModel("i18n") as ResourceModel).getResourceBundle();
@@ -82,7 +82,7 @@ export default class ErrorHandler extends UI5Object {
 
 		if(details.responseText){
 			try{
-				responseText = JSON.parse(details.responseText) as unknown;
+				responseText = JSON.stringify(JSON.parse(details.responseText), null, 2);
 			}catch{
 				responseText = details.responseText;
 			}
@@ -91,7 +91,7 @@ export default class ErrorHandler extends UI5Object {
 			this.errorText,
 			{
 				id: "serviceErrorMessageBox",
-				details: responseText as string,
+				details: responseText,
 				styleClass: this.component.getContentDensityClass(),<% if (gte11150) { %>
 				actions : [MessageBox.Action.CLOSE],<% }else{ %>
 				actions : [Action.CLOSE],<% } %>
