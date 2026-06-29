@@ -54,34 +54,26 @@ export class ODataMetadata {
   }
 
   static async load(serviceUrl) {
-    try {
-      // load the service metadata
-      const metadataUrl = new URL("$metadata", serviceUrl);
-      const response = await fetch(metadataUrl);
-      if (!response.ok) {
-        const error = new Error(`HTTP error ${response.status}: ${response.statusText}`);
-        error.status = response.status;
-        error.statusText = response.statusText;
-        error.url = response.url;
-        throw error;
-      }
+    // normalize the service URL to always end with a slash
+    const base = serviceUrl.endsWith("/") ? serviceUrl : serviceUrl + "/";
+    const metadataUrl = new URL("$metadata", base);
 
-      const metadataXML = await response.text();
-      const serviceMetadata = new X2JS({
-        attributePrefix: ""
-      }).xml2js(metadataXML);
-
-      // create and return a new ODataMetadata instance
-      return new ODataMetadata(serviceMetadata);
-    } catch (err) {
-      if (err.status) {
-        console.log(`Failed to load the service metadata ${err.url}: ${err.statusText}`);
-      } else if (err instanceof TypeError) {
-        console.log(`Failed to load the service metadata: ${err.cause?.message || err.message}`);
-      } else {
-        console.error(err);
-      }
+    const response = await fetch(metadataUrl);
+    if (!response.ok) {
+      const error = new Error(`HTTP error ${response.status}: ${response.statusText}`);
+      error.status = response.status;
+      error.statusText = response.statusText;
+      error.url = response.url;
+      throw error;
     }
+
+    const metadataXML = await response.text();
+    const serviceMetadata = new X2JS({
+      attributePrefix: ""
+    }).xml2js(metadataXML);
+
+    // create and return a new ODataMetadata instance
+    return new ODataMetadata(serviceMetadata);
   }
 
   getEntitySets() {
