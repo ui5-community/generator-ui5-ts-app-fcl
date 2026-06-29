@@ -121,11 +121,11 @@ export default class extends Generator {
     }
 
     if (this.options.newdir !== undefined) { // it's coming as string because it is an argument, not an option, so we can differentiate between "undefined" and "false" value
-      this.options.newdir = this.options.newdir !== "false";
+      this.options.newdir = this.options.newdir !== "false" && this.options.newdir !== false;
     }
 
     if (this.options.initrepo !== undefined) { // same as above
-      this.options.initrepo = this.options.initrepo !== "false";
+      this.options.initrepo = this.options.initrepo !== "false" && this.options.initrepo !== false;
     }
 
     // prepare the needed prompts
