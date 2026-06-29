@@ -12,7 +12,7 @@ export default {
 		}
 		try {
 			return parseFloat(value).toFixed(2);
-		} catch (error) {
+		} catch {
 			return value;
 		}
 	}

@@ -63,7 +63,11 @@ export default class App extends BaseController {
 	}
 
 	public onExit():void{<% if (gte11150) { %>
-		this.getRouter() && this.getRouter().detachRouteMatched((event: Router$RouteMatchedEvent)=>this.onRouteMatched(event), this);<% }else{ %>
-		this.getRouter() && this.getRouter().detachRouteMatched((event: UI5Event)=>this.onRouteMatched(event), this);<% } %>
+		if (this.getRouter()) {
+			this.getRouter().detachRouteMatched((event: Router$RouteMatchedEvent)=>this.onRouteMatched(event), this);
+		}<% }else{ %>
+		if (this.getRouter()) {
+			this.getRouter().detachRouteMatched((event: UI5Event)=>this.onRouteMatched(event), this);
+		}<% } %>
 	}
 }
