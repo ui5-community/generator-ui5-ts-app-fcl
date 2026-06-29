@@ -121,19 +121,11 @@ export default class extends Generator {
     }
 
     if (this.options.newdir !== undefined) { // it's coming as string because it is an argument, not an option, so we can differentiate between "undefined" and "false" value
-      if (this.options.newdir === "false") {
-        this.options.newdir = false;
-      } else if (this.options.newdir === "true") {
-        this.options.newdir = true;
-      }
+      this.options.newdir = this.options.newdir !== "false";
     }
 
     if (this.options.initrepo !== undefined) { // same as above
-      if (this.options.initrepo === "false") {
-        this.options.initrepo = false;
-      } else if (this.options.initrepo === "true") {
-        this.options.initrepo = true;
-      }
+      this.options.initrepo = this.options.initrepo !== "false";
     }
 
     // prepare the needed prompts
@@ -238,7 +230,7 @@ export default class extends Generator {
               })
             ).version;
           } catch (ex) {
-            chalk.red("Failed to lookup latest version for ${npmPackage}! Fallback to min version...");
+            this.log(chalk.red(`Failed to lookup latest version for ${npmPackage}! Fallback to min version...`));
             return minFwkVersion[answers.framework || this.options.framework];
           }
         },
